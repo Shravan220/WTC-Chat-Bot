@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WTC Shamshabad — Social Media Command Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,600;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Platform colours */
+  --wa:    #25D366;
+  --wa-dk: #128C7E;
+  --li:    #0A66C2;
+  --li-lt: #378FE9;
+  --ig:    #E1306C;
+  --ig-lt: #F77737;
+  --tw:    #1DA1F2;
+  --tw-dk: #0d8ecf;
+
+  /* UI */
+  --gold:     #C9A84C;
+  --gold-lt:  #F0D080;
+  --bg:       #08121A;
+  --surface:  #0F1923;
+  --surface2: #162028;
+  --surface3: #1E2D38;
+  --border:   #243140;
+  --text:     #E4ECF0;
+  --sub:      #7A8F9B;
+  --red:      #FF4D6A;
+  --green:    #25D366;
+
+  --platform: var(--wa);          /* active platform accent - changes */
+  --platform-dk: var(--wa-dk);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direction:column;height:100vh;}
+
+/* ══════════════════════ TOP BAR ══════════════════════ */
+.topbar{
+  background:linear-gradient(90deg,#0A1628 0%,#0D1B14 50%,#0A1628 100%);
+  border-bottom:1px solid var(--border);
+  padding:10px 20px;display:flex;align-items:center;gap:16px;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.topbar::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 40% 100% at 80% 50%,rgba(201,168,76,0.05),transparent);
+  pointer-events:none;
+}
+.tb-logo{
+  width:46px;height:46px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:15px;
+  color:#0A0F13;flex-shrink:0;box-shadow:0 0 24px rgba(201,168,76,0.3);
+}
+.tb-brand h1{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#fff;letter-spacing:-0.2px;}
+.tb-brand p{font-size:11px;color:var(--sub);margin-top:1px;}
+.tb-brand h1 span{color:var(--gold);}
+
+/* PLATFORM SWITCHER */
+.platform-switcher{display:flex;gap:6px;margin-left:20px;}
+.plat-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 14px;border-radius:10px;
+  border:1px solid var(--border);background:var(--surface2);
+  color:var(--sub);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;
+}
+.plat-btn:hover{border-color:rgba(255,255,255,0.15);color:var(--text);}
+.plat-btn.active{color:#fff;border-color:transparent;}
+.plat-btn.active.wa{background:rgba(37,211,102,0.18);border-color:rgba(37,211,102,0.4);color:var(--wa);}
+.plat-btn.active.li{background:rgba(10,102,194,0.18);border-color:rgba(10,102,194,0.4);color:var(--li-lt);}
+.plat-btn.active.ig{background:rgba(225,48,108,0.18);border-color:rgba(225,48,108,0.4);color:var(--ig-lt);}
+.plat-btn.active.tw{background:rgba(29,161,242,0.18);border-color:rgba(29,161,242,0.4);color:var(--tw);}
+.plat-icon{font-size:15px;}
+.plat-dot{width:6px;height:6px;border-radius:50%;animation:pulse 2s infinite;flex-shrink:0;}
+.wa .plat-dot{background:var(--wa);}
+.li .plat-dot{background:var(--li-lt);}
+.ig .plat-dot{background:var(--ig);}
+.tw .plat-dot{background:var(--tw);}
+
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.tb-stats{display:flex;gap:18px;}
+.tb-stat .val{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--wa);display:block;transition:color 0.3s;}
+.tb-stat .lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:0.7px;}
+.tb-status{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.25);
+  padding:6px 13px;border-radius:999px;font-size:11px;color:var(--wa);font-weight:500;
+  white-space:nowrap;transition:all 0.3s;
+}
+
+/* ══════════════════════ MAIN TABS ══════════════════════ */
+.nav-tabs{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 16px;display:flex;flex-shrink:0;
+}
+.nav-tab{
+  padding:10px 18px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:0.5px;color:var(--sub);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;
+}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--wa);border-bottom-color:var(--wa);transition:color 0.3s,border-color 0.3s;}
+
+/* ══════════════════════ LAYOUT ══════════════════════ */
+.main{display:grid;grid-template-columns:288px 1fr;flex:1;min-height:0;}
+
+/* ══════════════════════ SIDEBAR ══════════════════════ */
+.sidebar{
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;min-height:0;
+}
+.sidebar-sec{padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sidebar-sec h3{
+  font-family:'Playfair Display',serif;font-style:italic;font-size:13px;font-weight:700;
+  color:var(--gold);margin-bottom:10px;letter-spacing:0.2px;
+}
+
+/* Platform quick-send bar */
+.plat-quick{display:flex;gap:6px;margin-bottom:8px;}
+.pq-btn{
+  flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);font-size:11px;font-weight:600;cursor:pointer;
+  color:var(--sub);transition:all 0.18s;text-align:center;
+}
+.pq-btn:hover{border-color:rgba(255,255,255,0.15);color:var(--text);}
+.pq-btn.wa:hover,.pq-btn.wa.sel{background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.35);color:var(--wa);}
+.pq-btn.li:hover,.pq-btn.li.sel{background:rgba(10,102,194,0.12);border-color:rgba(10,102,194,0.35);color:var(--li-lt);}
+.pq-btn.ig:hover,.pq-btn.ig.sel{background:rgba(225,48,108,0.12);border-color:rgba(225,48,108,0.35);color:var(--ig-lt);}
+.pq-btn.tw:hover,.pq-btn.tw.sel{background:rgba(29,161,242,0.12);border-color:rgba(29,161,242,0.35);color:var(--tw);}
+
+.menu-btn{
+  width:100%;padding:9px 11px;background:transparent;border:1px solid transparent;
+  border-radius:9px;color:var(--sub);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
+  cursor:pointer;text-align:left;transition:all 0.18s;
+  display:flex;align-items:center;gap:9px;margin-bottom:3px;
+}
+.menu-btn:hover{background:var(--surface3);color:var(--text);}
+.menu-btn.active{background:rgba(37,211,102,0.1);border-color:rgba(37,211,102,0.3);color:var(--wa);}
+.menu-btn .icon{font-size:14px;flex-shrink:0;}
+.menu-btn .plat-badges{margin-left:auto;display:flex;gap:3px;}
+.plat-badge{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;}
+.pb-wa{background:rgba(37,211,102,0.15);color:var(--wa);}
+.pb-li{background:rgba(10,102,194,0.15);color:var(--li-lt);}
+.pb-ig{background:rgba(225,48,108,0.15);color:var(--ig-lt);}
+.pb-tw{background:rgba(29,161,242,0.15);color:var(--tw);}
+
+.bcast-btn{
+  width:100%;padding:9px 13px;
+  background:linear-gradient(135deg,var(--wa-dk),var(--wa));
+  border:none;border-radius:10px;color:#fff;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+  transition:all 0.2s;margin-bottom:8px;
+}
+.bcast-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,211,102,0.25);}
+
+.sub-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+.sub-pill{
+  display:flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;
+  background:var(--surface3);border:1px solid var(--border);color:var(--sub);
+}
+
+/* Contacts */
+.contact-list{flex:1;overflow-y:auto;padding:6px;}
+.contact-list::-webkit-scrollbar{width:3px;}
+.contact-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+.contact-item{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;
+  border-radius:9px;cursor:pointer;transition:background 0.15s;margin-bottom:2px;
+}
+.contact-item:hover{background:var(--surface2);}
+.contact-item.selected{background:rgba(37,211,102,0.08);}
+.c-avatar{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:12px;flex-shrink:0;font-family:'Syne',sans-serif;
+  position:relative;
+}
+.c-plat-badge{
+  position:absolute;bottom:-2px;right:-2px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  font-size:8px;border:1px solid var(--border);
+}
+.c-info{flex:1;min-width:0;}
+.c-name{font-size:12px;font-weight:600;color:var(--text);}
+.c-preview{font-size:10px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.c-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.c-time{font-size:10px;color:var(--sub);}
+.unread{
+  background:var(--wa);color:#0a0f13;border-radius:50%;
+  width:15px;height:15px;font-size:9px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ══════════════════════ CHAT AREA ══════════════════════ */
+.chat-col{display:flex;flex-direction:column;background:#0B141A;position:relative;min-height:0;}
+.chat-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(circle at 20px 20px,rgba(255,255,255,0.012) 1px,transparent 0);
+  background-size:40px 40px;
+}
+
+/* Platform header strip */
+.plat-header-strip{
+  height:3px;background:linear-gradient(90deg,var(--wa),transparent);
+  flex-shrink:0;transition:background 0.3s;
+}
+
+.chat-header{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:10px 16px;display:flex;align-items:center;gap:12px;
+  flex-shrink:0;z-index:10;position:relative;
+}
+.bot-ava{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  position:relative;
+}
+.bot-ava-inner{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--wa-dk),var(--wa));
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  transition:background 0.3s;
+}
+.bot-inf h4{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);}
+.bot-inf .bot-status{font-size:11px;color:var(--wa);transition:color 0.3s;}
+.bot-inf .bot-status::before{
+  content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--wa);margin-right:5px;vertical-align:middle;
+  animation:pulse 2s infinite;transition:background 0.3s;
+}
+.chat-acts{margin-left:auto;display:flex;gap:5px;}
+.chat-act{
+  width:32px;height:32px;border-radius:50%;background:var(--surface2);
+  border:1px solid var(--border);color:var(--sub);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.18s;
+}
+.chat-act:hover{background:var(--border);color:var(--text);}
+.chat-act.danger:hover{background:rgba(255,77,106,0.15);color:var(--red);border-color:rgba(255,77,106,0.3);}
+
+/* Search bar */
+.search-strip{
+  background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:7px 14px;display:none;flex-shrink:0;align-items:center;gap:8px;
+}
+.search-strip.visible{display:flex;}
+.search-strip input{
+  flex:1;background:var(--surface3);border:1px solid var(--border);
+  border-radius:8px;padding:6px 11px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:12px;outline:none;
+}
+.search-strip input:focus{border-color:rgba(37,211,102,0.35);}
+.search-close{background:none;border:none;color:var(--sub);cursor:pointer;font-size:15px;}
+
+/* Info banner */
+.info-banner{
+  background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.18);
+  border-radius:10px;padding:9px 13px;margin:10px 14px 0;
+  display:flex;align-items:flex-start;gap:9px;
+  font-size:11px;color:#b8a070;line-height:1.5;flex-shrink:0;
+}
+.ib-icon{font-size:13px;flex-shrink:0;margin-top:1px;}
+
+/* Messages */
+.chat-msgs{
+  flex:1;overflow-y:auto;padding:14px;
+  display:flex;flex-direction:column;gap:4px;position:relative;z-index:1;
+}
+.chat-msgs::-webkit-scrollbar{width:4px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.07);border-radius:2px;}
+
+.date-div{text-align:center;margin:10px 0;font-size:10px;color:var(--sub);}
+.date-div span{
+  background:rgba(30,40,50,0.9);padding:3px 12px;
+  border-radius:999px;border:1px solid var(--border);
+}
+
+.msg-grp{display:flex;flex-direction:column;gap:2px;margin-bottom:9px;}
+.msg-grp.out{align-items:flex-end;}
+.msg-grp.in{align-items:flex-start;}
+
+.bubble{
+  max-width:72%;padding:8px 12px 6px;border-radius:10px;
+  font-size:13px;line-height:1.5;position:relative;
+  animation:fadeUp 0.25s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.bubble.out{background:#005C4B;color:var(--text);border-radius:10px 10px 2px 10px;}
+.bubble.in{background:#1F2C34;color:var(--text);border-radius:10px 10px 10px 2px;}
+.bubble.highlighted{outline:2px solid var(--gold);}
+.btime{font-size:10px;color:var(--sub);margin-top:3px;display:flex;align-items:center;justify-content:flex-end;gap:3px;}
+.tick{color:var(--wa);font-size:11px;transition:color 0.3s;}
+
+/* Inline cards */
+.b-tag{
+  display:inline-block;background:rgba(201,168,76,0.2);color:var(--gold-lt);
+  font-size:10px;padding:2px 8px;border-radius:999px;margin-bottom:6px;
+  font-weight:600;letter-spacing:0.4px;border:1px solid rgba(201,168,76,0.3);
+}
+.card-grid{display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px;}
+.ev-card{
+  background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;padding:9px 11px;
+}
+.ev-card h5{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--gold-lt);margin-bottom:3px;}
+.ev-card p{font-size:11px;color:var(--sub);line-height:1.45;}
+.ev-meta{display:flex;gap:8px;margin-top:5px;flex-wrap:wrap;}
+.ev-meta span{font-size:10px;color:var(--wa);}
+
+/* LinkedIn post card */
+.li-card{
+  background:rgba(10,102,194,0.08);border:1px solid rgba(10,102,194,0.2);
+  border-radius:10px;padding:12px;margin-top:6px;
+}
+.li-card .li-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.li-card .li-ava{
+  width:32px;height:32px;border-radius:6px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:11px;color:#0A0F13;
+}
+.li-card .li-name{font-size:12px;font-weight:600;}
+.li-card .li-role{font-size:10px;color:var(--sub);}
+.li-card .li-body{font-size:12px;line-height:1.55;color:var(--text);}
+.li-card .li-tags{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;}
+.li-card .li-tag{font-size:10px;color:var(--li-lt);}
+.li-card .li-stats{display:flex;gap:12px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(10,102,194,0.15);}
+.li-card .li-stat{font-size:10px;color:var(--sub);}
+.li-card .li-stat span{color:var(--li-lt);font-weight:600;}
+
+/* IG post card */
+.ig-card{
+  background:rgba(225,48,108,0.07);border:1px solid rgba(225,48,108,0.18);
+  border-radius:10px;padding:10px;margin-top:6px;
+}
+.ig-card .ig-img{
+  height:80px;border-radius:7px;margin-bottom:8px;
+  background:linear-gradient(135deg,rgba(225,48,108,0.3),rgba(247,119,55,0.3));
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+}
+.ig-card .ig-caption{font-size:11px;line-height:1.5;color:var(--text);}
+.ig-card .ig-tags{font-size:10px;color:var(--ig-lt);margin-top:5px;}
+.ig-card .ig-stats{display:flex;gap:10px;margin-top:6px;}
+.ig-card .ig-stat{font-size:10px;color:var(--sub);}
+.ig-card .ig-stat span{color:var(--ig-lt);font-weight:600;}
+
+/* Reactions */
+.reaction-row{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;}
+.react{
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.11);
+  border-radius:999px;padding:2px 7px;font-size:11px;cursor:pointer;
+  transition:all 0.15s;
+}
+.react:hover{background:rgba(255,255,255,0.14);transform:scale(1.1);}
+.react.mine{background:rgba(37,211,102,0.14);border-color:rgba(37,211,102,0.3);}
+
+/* Quick replies */
+.qr-wrap{display:flex;flex-wrap:wrap;gap:5px;padding:0 14px 10px;z-index:1;position:relative;}
+.qr-btn{
+  padding:6px 13px;background:transparent;border:1px solid var(--wa);
+  border-radius:999px;color:var(--wa);font-family:'DM Sans',sans-serif;
+  font-size:11px;font-weight:500;cursor:pointer;transition:all 0.18s;white-space:nowrap;
+}
+.qr-btn:hover{background:var(--wa);color:#0A0F13;transform:translateY(-1px);}
+
+/* Typing */
+.typing-bub{
+  display:flex;align-items:center;gap:4px;padding:9px 12px;
+  background:#1F2C34;border-radius:10px 10px 10px 2px;
+  width:fit-content;animation:fadeUp 0.3s ease;
+}
+.tdot{width:6px;height:6px;background:var(--sub);border-radius:50%;animation:bounce 1.2s ease-in-out infinite;}
+.tdot:nth-child(2){animation-delay:0.2s;}
+.tdot:nth-child(3){animation-delay:0.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* Input bar */
+.chat-input-bar{
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:9px 12px;display:flex;align-items:center;gap:8px;
+  flex-shrink:0;z-index:10;position:relative;
+}
+.inp-extras{display:flex;gap:2px;}
+.inp-btn{
+  width:29px;height:29px;border-radius:50%;background:transparent;border:none;
+  color:var(--sub);cursor:pointer;font-size:15px;
+  display:flex;align-items:center;justify-content:center;transition:color 0.18s;
+}
+.inp-btn:hover{color:var(--text);}
+.chat-inp{
+  flex:1;background:var(--surface3);border:1px solid var(--border);
+  border-radius:22px;padding:8px 15px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:13px;outline:none;
+  transition:border-color 0.2s;
+}
+.chat-inp::placeholder{color:var(--sub);}
+.chat-inp:focus{border-color:rgba(37,211,102,0.35);}
+.send-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--wa);
+  border:none;color:#0A0F13;font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all 0.2s;
+}
+.send-btn:hover{background:var(--wa-dk);color:#fff;transform:scale(1.06);}
+
+/* Char counter */
+.char-c{font-size:10px;color:var(--sub);font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+
+/* Emoji picker */
+.emoji-pk{
+  position:absolute;bottom:62px;left:12px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:10px;z-index:100;
+  display:none;box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  animation:fadeUp 0.2s ease;
+}
+.emoji-pk.visible{display:block;}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;}
+.em-btn{
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  font-size:15px;cursor:pointer;border-radius:6px;border:none;background:none;transition:background 0.15s;
+}
+.em-btn:hover{background:var(--surface3);}
+
+/* ══════════════════════ STATS BAR ══════════════════════ */
+.statsbar{
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:7px 18px;display:flex;align-items:center;gap:18px;
+  font-size:11px;color:var(--sub);flex-shrink:0;
+}
+.si{display:flex;align-items:center;gap:5px;}
+.si strong{color:var(--wa);font-weight:600;font-family:'JetBrains Mono',monospace;transition:color 0.3s;}
+
+/* ══════════════════════ ANALYTICS ══════════════════════ */
+.panel{display:none;flex:1;overflow-y:auto;padding:18px;background:var(--bg);flex-direction:column;gap:14px;}
+.panel.active{display:flex;}
+.panel.full{grid-column:1/-1;}
+
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g31{display:grid;grid-template-columns:2fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+
+.kcard{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:13px;padding:16px;position:relative;overflow:hidden;
+}
+.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.kcard.g .kcard::before,.kcard.g::before{background:linear-gradient(90deg,var(--wa),transparent);}
+.kcard.b::before{background:linear-gradient(90deg,var(--li-lt),transparent);}
+.kcard.r::before{background:linear-gradient(90deg,var(--red),transparent);}
+.kcard.o::before{background:linear-gradient(90deg,var(--gold),transparent);}
+.kcard.p::before{background:linear-gradient(90deg,var(--ig),transparent);}
+.kcard.t::before{background:linear-gradient(90deg,var(--tw),transparent);}
+
+.k-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:var(--sub);margin-bottom:5px;}
+.k-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1;}
+.kcard.g .k-val{color:var(--wa);}
+.kcard.b .k-val{color:var(--li-lt);}
+.kcard.r .k-val{color:var(--red);}
+.kcard.o .k-val{color:var(--gold);}
+.kcard.p .k-val{color:var(--ig-lt);}
+.kcard.t .k-val{color:var(--tw);}
+.k-chg{font-size:11px;margin-top:3px;}
+.k-chg.up{color:#00cc66;} .k-chg.dn{color:var(--red);}
+.k-ico{position:absolute;right:12px;top:12px;font-size:22px;opacity:0.1;}
+
+.sec-title{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:13px;font-weight:700;color:var(--gold);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+
+/* Cross-platform comparison */
+.cmp-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.cmp-icon{width:28px;text-align:center;font-size:14px;flex-shrink:0;}
+.cmp-name{width:60px;font-size:11px;color:var(--sub);flex-shrink:0;}
+.cmp-bar-wrap{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.cmp-bar{height:100%;border-radius:4px;transition:width 1.2s ease;}
+.cmp-val{font-size:11px;font-family:'JetBrains Mono',monospace;width:40px;text-align:right;flex-shrink:0;}
+
+/* Chart bars */
+.cbars{display:flex;align-items:flex-end;gap:4px;height:80px;}
+.cbar{flex:1;border-radius:3px 3px 0 0;transition:opacity 0.2s;cursor:pointer;position:relative;}
+.cbar:hover{opacity:0.75;}
+.cbar .tip{
+  position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:4px;padding:2px 6px;font-size:9px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity 0.15s;font-family:'JetBrains Mono',monospace;
+}
+.cbar:hover .tip{opacity:1;}
+.cx{display:flex;justify-content:space-between;font-size:9px;color:var(--sub);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+
+/* Progress rows */
+.pr{margin-bottom:10px;}
+.pr-h{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;}
+.pr-h span:last-child{font-family:'JetBrains Mono',monospace;color:var(--wa);}
+.pr-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.pr-fill{height:100%;border-radius:3px;transition:width 1.2s ease;}
+
+/* Heatmap */
+.hmap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.hcell{aspect-ratio:1;border-radius:3px;cursor:pointer;transition:opacity 0.2s;}
+.hcell:hover{opacity:0.7;}
+.hdays{display:flex;justify-content:space-around;font-size:9px;color:var(--sub);margin-top:3px;}
+
+/* Data table */
+.dtable{width:100%;border-collapse:collapse;}
+.dtable th{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:600;padding:0 0 7px;text-align:left;border-bottom:1px solid var(--border);}
+.dtable td{font-size:11px;padding:8px 0;border-bottom:1px solid rgba(36,49,64,0.5);}
+.dtable tr:last-child td{border-bottom:none;}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;}
+.bg{background:rgba(37,211,102,0.13);color:var(--wa);}
+.bb{background:rgba(10,102,194,0.13);color:var(--li-lt);}
+.bp{background:rgba(225,48,108,0.13);color:var(--ig-lt);}
+.bt{background:rgba(29,161,242,0.13);color:var(--tw);}
+.bo{background:rgba(201,168,76,0.13);color:var(--gold);}
+.br{background:rgba(255,77,106,0.13);color:var(--red);}
+
+/* ══════════════════════ CONTENT CALENDAR ══════════════════════ */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.cal-day-header{font-size:10px;text-align:center;color:var(--sub);text-transform:uppercase;letter-spacing:0.5px;padding-bottom:6px;}
+.cal-cell{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;min-height:80px;padding:7px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.cal-cell.today{border-color:rgba(37,211,102,0.35);}
+.cal-date{font-size:10px;color:var(--sub);margin-bottom:3px;font-family:'JetBrains Mono',monospace;}
+.cal-date.today-date{color:var(--wa);font-weight:700;}
+.cal-post{
+  font-size:9px;padding:3px 6px;border-radius:4px;cursor:pointer;
+  line-height:1.3;transition:opacity 0.15s;
+}
+.cal-post:hover{opacity:0.8;}
+.cp-wa{background:rgba(37,211,102,0.15);color:var(--wa);}
+.cp-li{background:rgba(10,102,194,0.15);color:var(--li-lt);}
+.cp-ig{background:rgba(225,48,108,0.15);color:var(--ig-lt);}
+.cp-tw{background:rgba(29,161,242,0.15);color:var(--tw);}
+.cal-add{
+  font-size:10px;color:var(--sub);cursor:pointer;
+  margin-top:auto;text-align:center;padding:2px;
+  border-radius:4px;transition:all 0.15s;
+}
+.cal-add:hover{background:var(--surface3);color:var(--text);}
+
+/* ══════════════════════ COMPOSE ══════════════════════ */
+.compose-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:13px;padding:18px;
+}
+.compose-card h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:14px;}
+.fg{margin-bottom:12px;}
+.flbl{font-size:10px;font-weight:600;color:var(--sub);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:5px;}
+.finp,.fsel,.ftxt{
+  width:100%;background:var(--surface3);border:1px solid var(--border);
+  border-radius:9px;padding:8px 12px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:13px;outline:none;
+  transition:border-color 0.2s;
+}
+.finp:focus,.fsel:focus,.ftxt:focus{border-color:rgba(37,211,102,0.35);}
+.ftxt{resize:vertical;min-height:90px;line-height:1.5;}
+.fsel option{background:var(--surface);}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* Platform toggles */
+.plat-toggles{display:flex;gap:8px;flex-wrap:wrap;}
+.plat-toggle{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);cursor:pointer;font-size:12px;font-weight:600;
+  transition:all 0.18s;color:var(--sub);
+}
+.plat-toggle.on-wa{background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.35);color:var(--wa);}
+.plat-toggle.on-li{background:rgba(10,102,194,0.12);border-color:rgba(10,102,194,0.35);color:var(--li-lt);}
+.plat-toggle.on-ig{background:rgba(225,48,108,0.12);border-color:rgba(225,48,108,0.35);color:var(--ig-lt);}
+.plat-toggle.on-tw{background:rgba(29,161,242,0.12);border-color:rgba(29,161,242,0.35);color:var(--tw);}
+
+.prev-bubble{
+  background:var(--surface3);border-radius:10px;padding:12px 14px;
+  font-size:12px;line-height:1.6;margin-top:10px;
+  border-left:3px solid var(--wa);transition:border-color 0.3s;
+}
+.prev-label{font-size:10px;color:var(--sub);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px;}
+
+/* Char counter */
+.cc-row{display:flex;gap:10px;margin-top:5px;flex-wrap:wrap;}
+.cc-item{font-size:10px;font-family:'JetBrains Mono',monospace;}
+.cc-item .cc-plat{margin-right:4px;}
+.cc-ok{color:var(--wa);}
+.cc-warn{color:var(--gold);}
+.cc-over{color:var(--red);}
+
+/* Schedule opts */
+.sched-opts{display:flex;gap:6px;}
+.so{
+  flex:1;padding:9px 6px;border:1px solid var(--border);border-radius:8px;
+  background:var(--surface3);cursor:pointer;text-align:center;
+  transition:all 0.18s;font-size:11px;color:var(--sub);
+}
+.so.active{border-color:var(--wa);background:rgba(37,211,102,0.07);color:var(--wa);}
+.so:hover{border-color:rgba(255,255,255,0.15);color:var(--text);}
+.so-t{font-size:12px;font-weight:600;}
+.so-d{font-size:9px;margin-top:2px;}
+
+/* ══════════════════════ SUBSCRIBERS ══════════════════════ */
+.subs-search{
+  flex:1;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:8px 13px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:13px;outline:none;
+  transition:border-color 0.2s;
+}
+.subs-search:focus{border-color:rgba(37,211,102,0.35);}
+.stbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:13px;overflow:hidden;}
+.stbl{width:100%;border-collapse:collapse;}
+.stbl thead{background:var(--surface2);}
+.stbl th{font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--sub);font-weight:600;padding:9px 13px;text-align:left;}
+.stbl td{font-size:11px;padding:9px 13px;border-top:1px solid var(--border);}
+.stbl tr:hover td{background:rgba(255,255,255,0.015);}
+.s-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.tag-pill{padding:1px 6px;border-radius:999px;font-size:10px;font-weight:600;}
+.tp-wa{background:rgba(37,211,102,0.12);color:var(--wa);}
+.tp-li{background:rgba(10,102,194,0.12);color:var(--li-lt);}
+.tp-ig{background:rgba(225,48,108,0.12);color:var(--ig-lt);}
+.tp-tw{background:rgba(29,161,242,0.12);color:var(--tw);}
+.tp-vip{background:rgba(201,168,76,0.12);color:var(--gold);}
+.act-m{background:none;border:none;color:var(--sub);cursor:pointer;font-size:13px;transition:color 0.15s;padding:2px;}
+.act-m:hover{color:var(--text);}
+
+/* ══════════════════════ MODALS ══════════════════════ */
+.modal-ov{
+  position:fixed;inset:0;background:rgba(0,0,0,0.75);
+  z-index:1000;display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-ov.active{display:flex;}
+.modal{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;width:540px;max-width:95vw;
+  overflow:hidden;animation:fadeUp 0.3s ease;
+  max-height:90vh;display:flex;flex-direction:column;
+}
+.mhdr{
+  padding:18px 22px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.mhdr h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);}
+.mhdr h3 span{color:var(--wa);}
+.mcls{
+  width:28px;height:28px;border-radius:50%;background:var(--surface3);
+  border:1px solid var(--border);color:var(--sub);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.2s;
+}
+.mcls:hover{background:var(--border);color:var(--text);}
+.mbody{padding:18px 22px;overflow-y:auto;flex:1;}
+.mftr{
+  padding:12px 22px 16px;display:flex;gap:8px;justify-content:flex-end;
+  flex-shrink:0;border-top:1px solid var(--border);
+}
+.btn-sec{
+  padding:8px 16px;background:var(--surface3);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:500;cursor:pointer;transition:all 0.18s;
+}
+.btn-sec:hover{background:var(--border);}
+.btn-pri{
+  padding:8px 20px;background:linear-gradient(135deg,var(--wa-dk),var(--wa));
+  border:none;border-radius:8px;color:#fff;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;
+}
+.btn-pri:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,211,102,0.28);}
+
+/* Reg steps */
+.rsteps{display:flex;gap:6px;margin-bottom:18px;}
+.rstep{
+  flex:1;padding:5px;text-align:center;border-radius:7px;
+  font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;
+  border:1px solid var(--border);color:var(--sub);
+}
+.rstep.active{border-color:var(--wa);color:var(--wa);background:rgba(37,211,102,0.07);}
+.rstep.done{border-color:var(--wa-dk);color:var(--wa-dk);}
+
+/* ══════════════════════ TOAST ══════════════════════ */
+.toast{
+  position:fixed;bottom:22px;right:22px;
+  background:var(--surface2);border:1px solid rgba(37,211,102,0.35);
+  border-radius:11px;padding:11px 16px;
+  display:flex;align-items:center;gap:10px;
+  z-index:2000;transform:translateY(80px);opacity:0;
+  transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);max-width:300px;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.err{border-color:rgba(255,77,106,0.35);}
+.ti{font-size:18px;flex-shrink:0;}
+.tt h5{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text);}
+.tt p{font-size:11px;color:var(--sub);margin-top:1px;}
+
+/* scrollbar global */
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- ═══════ TOP BAR ═══════ -->
+<div class="topbar">
+  <div class="tb-logo">WTC</div>
+  <div class="tb-brand">
+    <h1>WTC Shamshabad <span>Social Command Centre</span></h1>
+    <p>Multi-platform automation · WhatsApp Business · LinkedIn · Instagram · Twitter/X</p>
+  </div>
+
+  <div class="platform-switcher">
+    <button class="plat-btn active wa" onclick="switchPlatform('wa',this)">
+      <span class="plat-icon">💬</span> WhatsApp
+      <div class="plat-dot"></div>
+    </button>
+    <button class="plat-btn li" onclick="switchPlatform('li',this)">
+      <span class="plat-icon">💼</span> LinkedIn
+      <div class="plat-dot"></div>
+    </button>
+    <button class="plat-btn ig" onclick="switchPlatform('ig',this)">
+      <span class="plat-icon">📸</span> Instagram
+      <div class="plat-dot"></div>
+    </button>
+    <button class="plat-btn tw" onclick="switchPlatform('tw',this)">
+      <span class="plat-icon">𝕏</span> Twitter/X
+      <div class="plat-dot"></div>
+    </button>
+  </div>
+
+  <div class="tb-right">
+    <div class="tb-stats">
+      <div class="tb-stat"><span class="val" id="statFollowers">14.2K</span><span class="lbl">Followers</span></div>
+      <div class="tb-stat"><span class="val" id="statReach">8,430</span><span class="lbl">Reach Today</span></div>
+      <div class="tb-stat"><span class="val" id="statPosts">38</span><span class="lbl">Posts Live</span></div>
+    </div>
+    <div class="tb-status" id="tbStatus"><div class="status-dot" style="width:7px;height:7px;border-radius:50%;background:var(--wa);animation:pulse 2s infinite;"></div><span id="tbStatusTxt">WhatsApp Live</span></div>
+  </div>
+</div>
+
+<!-- ═══════ NAV TABS ═══════ -->
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="switchTab('chat',this)">💬 Chat Simulator</div>
+  <div class="nav-tab" onclick="switchTab('compose',this)">✍️ Compose & Schedule</div>
+  <div class="nav-tab" onclick="switchTab('calendar',this)">📅 Content Calendar</div>
+  <div class="nav-tab" onclick="switchTab('analytics',this)">📊 Analytics</div>
+  <div class="nav-tab" onclick="switchTab('subscribers',this)">👥 Subscribers</div>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
+<div class="main">
+
+<!-- ═══════════════════ SIDEBAR (chat only) ═══════════════════ -->
+<div class="sidebar" id="chatSidebar">
+
+  <div class="sidebar-sec">
+    <h3>Platform Quick-Send</h3>
+    <div class="plat-quick">
+      <button class="pq-btn wa sel" id="pq-wa" onclick="selectPlatQuick('wa')">💬 WA</button>
+      <button class="pq-btn li" id="pq-li" onclick="selectPlatQuick('li')">💼 LI</button>
+      <button class="pq-btn ig" id="pq-ig" onclick="selectPlatQuick('ig')">📸 IG</button>
+      <button class="pq-btn tw" id="pq-tw" onclick="selectPlatQuick('tw')">𝕏 TW</button>
+    </div>
+    <h3 style="margin-top:10px;">Bot Commands</h3>
+    <button class="menu-btn active" id="btn-hi" onclick="triggerCmd('hi',this)">
+      <span class="icon">👋</span> Greet / Menu
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span><span class="plat-badge pb-li">LI</span></div>
+    </button>
+    <button class="menu-btn" id="btn-events" onclick="triggerCmd('events',this)">
+      <span class="icon">🎪</span> Events
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span><span class="plat-badge pb-li">LI</span><span class="plat-badge pb-ig">IG</span></div>
+    </button>
+    <button class="menu-btn" id="btn-news" onclick="triggerCmd('news',this)">
+      <span class="icon">📰</span> News & Updates
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span><span class="plat-badge pb-li">LI</span><span class="plat-badge pb-tw">X</span></div>
+    </button>
+    <button class="menu-btn" id="btn-offers" onclick="triggerCmd('offers',this)">
+      <span class="icon">🎁</span> Offers & Deals
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span><span class="plat-badge pb-ig">IG</span></div>
+    </button>
+    <button class="menu-btn" id="btn-map" onclick="triggerCmd('map',this)">
+      <span class="icon">🗺️</span> Directory & Map
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span></div>
+    </button>
+    <button class="menu-btn" id="btn-contact" onclick="triggerCmd('contact',this)">
+      <span class="icon">📞</span> Contact Support
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span></div>
+    </button>
+    <button class="menu-btn" id="btn-subscribe" onclick="triggerCmd('subscribe',this)">
+      <span class="icon">🔔</span> Subscribe
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span><span class="plat-badge pb-li">LI</span></div>
+    </button>
+    <button class="menu-btn" id="btn-parking" onclick="triggerCmd('parking',this)">
+      <span class="icon">🅿️</span> Parking Info
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span></div>
+    </button>
+    <button class="menu-btn" id="btn-register" onclick="triggerCmd('register',this)">
+      <span class="icon">✅</span> Event Register
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span><span class="plat-badge pb-li">LI</span></div>
+    </button>
+    <button class="menu-btn" id="btn-feedback" onclick="triggerCmd('feedback',this)">
+      <span class="icon">⭐</span> Feedback
+      <div class="plat-badges"><span class="plat-badge pb-wa">WA</span><span class="plat-badge pb-ig">IG</span></div>
+    </button>
+    <button class="menu-btn" id="btn-lipost" onclick="triggerCmd('lipost',this)">
+      <span class="icon">💼</span> LinkedIn Post
+      <div class="plat-badges"><span class="plat-badge pb-li">LI</span></div>
+    </button>
+    <button class="menu-btn" id="btn-igpost" onclick="triggerCmd('igpost',this)">
+      <span class="icon">📸</span> Instagram Post
+      <div class="plat-badges"><span class="plat-badge pb-ig">IG</span></div>
+    </button>
+  </div>
+
+  <div class="sidebar-sec">
+    <h3>Broadcast</h3>
+    <button class="bcast-btn" onclick="openBcast()">📢 Send Broadcast</button>
+    <div class="sub-pills">
+      <div class="sub-pill" style="color:var(--wa);">💬 2,847</div>
+      <div class="sub-pill" style="color:var(--li-lt);">💼 1,204</div>
+      <div class="sub-pill" style="color:var(--ig-lt);">📸 8,430</div>
+      <div class="sub-pill" style="color:var(--tw);">𝕏 3,120</div>
+    </div>
+  </div>
+
+  <div style="padding:9px 12px 5px;border-bottom:1px solid var(--border);flex-shrink:0;">
+    <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:7px;">Recent Conversations</div>
+  </div>
+  <div class="contact-list">
+    <div class="contact-item selected" onclick="selectContact(this)">
+      <div class="c-avatar" style="background:#1a6b4a;">AM<div class="c-plat-badge">💬</div></div>
+      <div class="c-info"><div class="c-name">Arjun Mehta</div><div class="c-preview">✓✓ Thanks for the reminder!</div></div>
+      <div class="c-meta"><div class="c-time">Now</div></div>
+    </div>
+    <div class="contact-item" onclick="selectContact(this)">
+      <div class="c-avatar" style="background:#0A3B6B;">PK<div class="c-plat-badge">💼</div></div>
+      <div class="c-info"><div class="c-name">Priya K. • LinkedIn</div><div class="c-preview">Interested in the summit</div></div>
+      <div class="c-meta"><div class="c-time">3m</div><div class="unread">2</div></div>
+    </div>
+    <div class="contact-item" onclick="selectContact(this)">
+      <div class="c-avatar" style="background:#6b1a3a;">RS<div class="c-plat-badge">📸</div></div>
+      <div class="c-info"><div class="c-name">rahul_shah • IG</div><div class="c-preview">❤️ loved the last post!</div></div>
+      <div class="c-meta"><div class="c-time">7m</div></div>
+    </div>
+    <div class="contact-item" onclick="selectContact(this)">
+      <div class="c-avatar" style="background:#1a4a6b;">SN<div class="c-plat-badge">💬</div></div>
+      <div class="c-info"><div class="c-name">Sunita N.</div><div class="c-preview">Do you have parking info?</div></div>
+      <div class="c-meta"><div class="c-time">12m</div><div class="unread">1</div></div>
+    </div>
+    <div class="contact-item" onclick="selectContact(this)">
+      <div class="c-avatar" style="background:#1a3b6b;">TD<div class="c-plat-badge">𝕏</div></div>
+      <div class="c-info"><div class="c-name">@TechDesk_Hyd • X</div><div class="c-preview">Great event at WTC! 🔥</div></div>
+      <div class="c-meta"><div class="c-time">20m</div></div>
+    </div>
+    <div class="contact-item" onclick="selectContact(this)">
+      <div class="c-avatar" style="background:#6b3a1a;">VR<div class="c-plat-badge">💬</div></div>
+      <div class="c-info"><div class="c-name">Vikram R.</div><div class="c-preview">Register me for the workshop</div></div>
+      <div class="c-meta"><div class="c-time">26m</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CHAT PANEL ═══════════════════ -->
+<div class="chat-col" id="panel-chat">
+  <div class="chat-bg"></div>
+  <div class="plat-header-strip" id="platStrip"></div>
+
+  <div class="chat-header">
+    <div class="bot-ava">
+      <div class="bot-ava-inner" id="botAvaInner">🤖</div>
+    </div>
+    <div class="bot-inf">
+      <h4 id="botName">WTC Shamshabad Bot</h4>
+      <div class="bot-status" id="botStatus">WhatsApp Business · Responds instantly</div>
+    </div>
+    <div class="chat-acts">
+      <button class="chat-act" onclick="toggleSearch()" title="Search">🔍</button>
+      <button class="chat-act" id="muteBtn" onclick="toggleMute(this)" title="Mute">🔔</button>
+      <button class="chat-act" onclick="showBotInfo()" title="Info">ℹ️</button>
+      <button class="chat-act danger" onclick="clearChat()" title="Clear">🗑️</button>
+    </div>
+  </div>
+
+  <div class="search-strip" id="searchStrip">
+    <input type="text" placeholder="Search messages…" id="searchInp" oninput="doSearch(this.value)">
+    <button class="search-close" onclick="toggleSearch()">✕</button>
+    <span id="searchCnt" style="font-size:11px;color:var(--sub);white-space:nowrap;"></span>
+  </div>
+
+  <div class="info-banner">
+    <span class="ib-icon">💡</span>
+    <span>Interactive demo — switch platforms above, use sidebar commands, or type naturally. Try: <em>"events"</em>, <em>"linkedin post"</em>, <em>"instagram"</em>, <em>"parking"</em>, <em>"register"</em></span>
+  </div>
+
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="date-div"><span>Today, February 27 2026</span></div>
+    <div class="msg-grp in">
+      <div class="bubble in">
+        🏢 <strong>Welcome to WTC Shamshabad!</strong><br><br>
+        I'm your multi-platform assistant, active on:<br>
+        💬 WhatsApp Business &nbsp; 💼 LinkedIn &nbsp; 📸 Instagram &nbsp; 𝕏 Twitter/X<br><br>
+        How can I help you today?<br><br>
+        1️⃣ Upcoming Events &nbsp;&nbsp; 2️⃣ News &amp; Updates<br>
+        3️⃣ Special Offers &nbsp;&nbsp;&nbsp; 4️⃣ Building Directory<br>
+        5️⃣ Contact Support &nbsp;&nbsp; 6️⃣ Subscribe to Alerts<br>
+        7️⃣ Event Registration &nbsp; 8️⃣ Parking Info
+        <div class="btime">10:01 AM</div>
+      </div>
+      <div class="reaction-row">
+        <div class="react" onclick="toggleReact(this)">👋 1</div>
+        <div class="react" onclick="toggleReact(this)">😊</div>
+        <div class="react" onclick="toggleReact(this)">❤️</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="qr-wrap" id="qrWrap">
+    <button class="qr-btn" onclick="sendQ('events')">🎪 Events</button>
+    <button class="qr-btn" onclick="sendQ('news')">📰 News</button>
+    <button class="qr-btn" onclick="sendQ('offers')">🎁 Offers</button>
+    <button class="qr-btn" onclick="sendQ('map')">🗺️ Directory</button>
+    <button class="qr-btn" onclick="sendQ('parking')">🅿️ Parking</button>
+    <button class="qr-btn" onclick="sendQ('lipost')">💼 LinkedIn</button>
+    <button class="qr-btn" onclick="sendQ('igpost')">📸 Instagram</button>
+  </div>
+
+  <!-- Emoji picker -->
+  <div class="emoji-pk" id="emojiPk">
+    <div class="emoji-grid" id="emojiGrid"></div>
+  </div>
+
+  <div class="chat-input-bar">
+    <div class="inp-extras">
+      <button class="inp-btn" onclick="toggleEmoji()" title="Emoji">😊</button>
+      <button class="inp-btn" onclick="toast('📎','Attach File','File attachment ready in production')" title="Attach">📎</button>
+    </div>
+    <input type="text" class="chat-inp" id="chatInp"
+      placeholder="Type a message or 1–8…"
+      onkeydown="if(event.key==='Enter')sendMsg()"
+      oninput="updateCC(this.value)">
+    <span class="char-c" id="charCnt"></span>
+    <button class="send-btn" onclick="sendMsg()">➤</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ COMPOSE & SCHEDULE PANEL ═══════════════════ -->
+<div class="panel full" id="panel-compose" style="grid-column:1/-1;">
+  <div class="g2">
+    <div class="compose-card">
+      <h3>✍️ Compose Multi-Platform Post</h3>
+
+      <div class="fg">
+        <label class="flbl">Publish to Platforms</label>
+        <div class="plat-toggles">
+          <div class="plat-toggle on-wa" id="tog-wa" onclick="togglePlatform('wa')">💬 WhatsApp</div>
+          <div class="plat-toggle on-li" id="tog-li" onclick="togglePlatform('li')">💼 LinkedIn</div>
+          <div class="plat-toggle on-ig" id="tog-ig" onclick="togglePlatform('ig')">📸 Instagram</div>
+          <div class="plat-toggle on-tw" id="tog-tw" onclick="togglePlatform('tw')">𝕏 Twitter/X</div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="flbl">Content Type</label>
+        <select class="fsel" id="postType" onchange="updatePrev()">
+          <option value="event">🎪 Event Announcement</option>
+          <option value="news">📰 News Update</option>
+          <option value="offer">🎁 Special Offer</option>
+          <option value="thought">💡 Thought Leadership (LinkedIn)</option>
+          <option value="behind">🎬 Behind the Scenes (Instagram)</option>
+          <option value="alert">🚨 Important Alert</option>
+          <option value="poll">📊 Poll / Question</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label class="flbl">Message / Caption</label>
+        <textarea class="ftxt" id="postContent" oninput="updatePrev();updateCCCompose()" placeholder="Write your post content…">🏢 WTC Shamshabad Update!
+
+📅 Tech Summit 2026 is THIS FRIDAY, Feb 28 at 10 AM!
+
+🎤 AI & Innovation keynotes from industry leaders.
+🤝 500+ attendees expected.
+📍 Hall A, Level 2 — Register: bit.ly/wtc-summit26
+
+#WTCShamshabad #TechSummit2026 #Hyderabad #Innovation</textarea>
+        <div class="cc-row" id="ccRow"></div>
+      </div>
+
+      <div class="frow">
+        <div class="fg">
+          <label class="flbl">Media Attachment</label>
+          <select class="fsel">
+            <option>Text Only</option>
+            <option>With Image</option>
+            <option>With Video Reel (IG)</option>
+            <option>With PDF (WA / LI)</option>
+            <option>With LinkedIn Article</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flbl">Target Audience</label>
+          <select class="fsel">
+            <option>All Audiences</option>
+            <option>Tenants Only</option>
+            <option>Event Registrants</option>
+            <option>VIP Members</option>
+            <option>Professional (LinkedIn)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="flbl">Schedule</label>
+        <div class="sched-opts">
+          <div class="so active" onclick="selSched(this)"><div class="so-t">⚡ Now</div><div class="so-d">Post immediately</div></div>
+          <div class="so" onclick="selSched(this)"><div class="so-t">⏰ Schedule</div><div class="so-d">Pick date/time</div></div>
+          <div class="so" onclick="selSched(this)"><div class="so-t">📅 Draft</div><div class="so-d">Save for later</div></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:4px;justify-content:flex-end;">
+        <button class="btn-sec" onclick="toast('💾','Draft Saved','Post saved across all selected platforms')">💾 Save Draft</button>
+        <button class="btn-pri" onclick="publishPost()">🚀 Publish Now</button>
+      </div>
+    </div>
+
+    <!-- Live preview -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="compose-card">
+        <div class="sec-title">👁️ Live Preview</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;" id="prevTabs">
+          <button class="pq-btn wa sel" style="flex:1;font-size:11px;" onclick="selectPrevTab('wa',this)">💬 WA</button>
+          <button class="pq-btn li" style="flex:1;font-size:11px;" onclick="selectPrevTab('li',this)">💼 LI</button>
+          <button class="pq-btn ig" style="flex:1;font-size:11px;" onclick="selectPrevTab('ig',this)">📸 IG</button>
+          <button class="pq-btn tw" style="flex:1;font-size:11px;" onclick="selectPrevTab('tw',this)">𝕏 TW</button>
+        </div>
+        <div id="prevContent" style="font-size:12px;line-height:1.6;"></div>
+      </div>
+      <div class="compose-card">
+        <div class="sec-title">📋 Platform Best Practices</div>
+        <div id="bestPractices" style="font-size:11px;color:var(--sub);line-height:1.8;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scheduled posts table -->
+  <div class="compose-card">
+    <div class="sec-title">📅 Scheduled Posts Queue</div>
+    <table class="dtable">
+      <thead>
+        <tr><th>Content</th><th>Platforms</th><th>Audience</th><th>Scheduled</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>🎨 Design Week Hyderabad Teaser</td>
+          <td><span class="badge bg">WA</span> <span class="badge bb">LI</span> <span class="badge bp">IG</span></td>
+          <td>All (15,601)</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">Mar 8 · 9:00 AM</td>
+          <td><span class="badge bo">Scheduled</span></td>
+          <td><button class="act-m" onclick="toast('✏️','Edit Post','Opening post editor…')">✏️</button> <button class="act-m" onclick="toast('🗑️','Deleted','Post removed from queue')">🗑️</button></td>
+        </tr>
+        <tr>
+          <td>🌿 Startup Pitch Day — Last Call</td>
+          <td><span class="badge bg">WA</span> <span class="badge bt">X</span></td>
+          <td>Event Subs (893)</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">Mar 4 · 10:00 AM</td>
+          <td><span class="badge bo">Scheduled</span></td>
+          <td><button class="act-m" onclick="toast('✏️','Edit Post','Opening post editor…')">✏️</button> <button class="act-m" onclick="toast('🗑️','Deleted','Post removed from queue')">🗑️</button></td>
+        </tr>
+        <tr>
+          <td>📸 Office Spaces Behind the Scenes</td>
+          <td><span class="badge bp">IG</span> <span class="badge bb">LI</span></td>
+          <td>All Followers</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">Mar 2 · 6:00 PM</td>
+          <td><span class="badge bo">Scheduled</span></td>
+          <td><button class="act-m" onclick="toast('✏️','Edit Post','Opening post editor…')">✏️</button> <button class="act-m" onclick="toast('🗑️','Deleted','Post removed')">🗑️</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════ CALENDAR PANEL ═══════════════════ -->
+<div class="panel full" id="panel-calendar" style="grid-column:1/-1;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;">📅 Content Calendar — March 2026</div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-sec" onclick="toast('⬅️','March','Navigated to March 2026')">◀ Prev</button>
+      <button class="btn-sec" onclick="toast('➡️','April','Navigated to April 2026')">Next ▶</button>
+      <button class="btn-pri" onclick="toast('➕','New Post','Opening post composer…')">➕ Add Post</button>
+    </div>
+  </div>
+  <!-- Legend -->
+  <div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;"><div style="width:10px;height:10px;border-radius:2px;background:rgba(37,211,102,0.3);"></div>WhatsApp</div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;"><div style="width:10px;height:10px;border-radius:2px;background:rgba(10,102,194,0.3);"></div>LinkedIn</div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;"><div style="width:10px;height:10px;border-radius:2px;background:rgba(225,48,108,0.3);"></div>Instagram</div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;"><div style="width:10px;height:10px;border-radius:2px;background:rgba(29,161,242,0.3);"></div>Twitter/X</div>
+  </div>
+  <div id="calGrid"></div>
+</div>
+
+<!-- ═══════════════════ ANALYTICS PANEL ═══════════════════ -->
+<div class="panel full" id="panel-analytics" style="grid-column:1/-1;">
+  <!-- KPIs -->
+  <div class="g4">
+    <div class="kcard g"><div class="k-ico">💬</div><div class="k-lbl">WA Messages Today</div><div class="k-val">124</div><div class="k-chg up">↑ 18% vs yesterday</div></div>
+    <div class="kcard b"><div class="k-ico">💼</div><div class="k-lbl">LinkedIn Impressions</div><div class="k-val">4,820</div><div class="k-chg up">↑ 34% this week</div></div>
+    <div class="kcard p"><div class="k-ico">📸</div><div class="k-lbl">Instagram Reach</div><div class="k-val">8,430</div><div class="k-chg up">↑ 22% this week</div></div>
+    <div class="kcard t"><div class="k-ico">𝕏</div><div class="k-lbl">Twitter Impressions</div><div class="k-val">3,120</div><div class="k-chg up">↑ 9% this week</div></div>
+  </div>
+  <div class="g4">
+    <div class="kcard g"><div class="k-lbl">WA Subscribers</div><div class="k-val">2,847</div><div class="k-chg up">↑ 43 this week</div></div>
+    <div class="kcard b"><div class="k-lbl">LinkedIn Followers</div><div class="k-val">1,204</div><div class="k-chg up">↑ 87 this month</div></div>
+    <div class="kcard p"><div class="k-lbl">Instagram Followers</div><div class="k-val">50.2K</div><div class="k-chg up">↑ milestone hit!</div></div>
+    <div class="kcard t"><div class="k-lbl">Twitter Followers</div><div class="k-val">3,120</div><div class="k-chg up">↑ 56 this week</div></div>
+  </div>
+
+  <div class="g31">
+    <!-- Cross-platform engagement chart -->
+    <div class="kcard">
+      <div class="sec-title">📊 7-Day Cross-Platform Volume</div>
+      <div class="cbars" id="anaChart"></div>
+      <div class="cx" id="anaChartX"></div>
+      <div style="display:flex;gap:14px;margin-top:10px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:5px;font-size:11px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--wa);"></div>WhatsApp</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:11px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--li-lt);"></div>LinkedIn</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:11px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--ig-lt);"></div>Instagram</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:11px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--tw);"></div>Twitter/X</div>
+      </div>
+    </div>
+
+    <!-- Platform breakdown donut -->
+    <div class="kcard">
+      <div class="sec-title">🥧 Audience Split</div>
+      <svg width="120" height="120" viewBox="0 0 120 120" style="display:block;margin:0 auto 12px;">
+        <circle cx="60" cy="60" r="44" fill="none" stroke="#1E2D38" stroke-width="18"/>
+        <circle cx="60" cy="60" r="44" fill="none" stroke="#25D366" stroke-width="18" stroke-dasharray="99 277" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+        <circle cx="60" cy="60" r="44" fill="none" stroke="#378FE9" stroke-width="18" stroke-dasharray="42 277" stroke-dashoffset="-99" transform="rotate(-90 60 60)"/>
+        <circle cx="60" cy="60" r="44" fill="none" stroke="#F77737" stroke-width="18" stroke-dasharray="97 277" stroke-dashoffset="-141" transform="rotate(-90 60 60)"/>
+        <circle cx="60" cy="60" r="44" fill="none" stroke="#1DA1F2" stroke-width="18" stroke-dasharray="39 277" stroke-dashoffset="-238" transform="rotate(-90 60 60)"/>
+      </svg>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;gap:7px;font-size:11px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--wa);flex-shrink:0;"></div><span style="flex:1;">WhatsApp</span><strong style="font-family:'JetBrains Mono',monospace;font-size:11px;">2,847</strong></div>
+        <div style="display:flex;align-items:center;gap:7px;font-size:11px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--li-lt);flex-shrink:0;"></div><span style="flex:1;">LinkedIn</span><strong style="font-family:'JetBrains Mono',monospace;font-size:11px;">1,204</strong></div>
+        <div style="display:flex;align-items:center;gap:7px;font-size:11px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--ig-lt);flex-shrink:0;"></div><span style="flex:1;">Instagram</span><strong style="font-family:'JetBrains Mono',monospace;font-size:11px;">50.2K</strong></div>
+        <div style="display:flex;align-items:center;gap:7px;font-size:11px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--tw);flex-shrink:0;"></div><span style="flex:1;">Twitter/X</span><strong style="font-family:'JetBrains Mono',monospace;font-size:11px;">3,120</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <!-- Performance -->
+    <div class="kcard">
+      <div class="sec-title">⚡ Platform Performance Metrics</div>
+      <div class="cmp-row"><div class="cmp-icon">💬</div><div class="cmp-name">WA Open</div><div class="cmp-bar-wrap"><div class="cmp-bar" style="width:98%;background:var(--wa);"></div></div><div class="cmp-val" style="color:var(--wa);">98%</div></div>
+      <div class="cmp-row"><div class="cmp-icon">💼</div><div class="cmp-name">LI Engage</div><div class="cmp-bar-wrap"><div class="cmp-bar" style="width:34%;background:var(--li-lt);"></div></div><div class="cmp-val" style="color:var(--li-lt);">34%</div></div>
+      <div class="cmp-row"><div class="cmp-icon">📸</div><div class="cmp-name">IG Reach</div><div class="cmp-bar-wrap"><div class="cmp-bar" style="width:78%;background:var(--ig-lt);"></div></div><div class="cmp-val" style="color:var(--ig-lt);">78%</div></div>
+      <div class="cmp-row"><div class="cmp-icon">𝕏</div><div class="cmp-name">X Impressions</div><div class="cmp-bar-wrap"><div class="cmp-bar" style="width:52%;background:var(--tw);"></div></div><div class="cmp-val" style="color:var(--tw);">52%</div></div>
+      <div style="height:1px;background:var(--border);margin:10px 0;"></div>
+      <div class="pr"><div class="pr-h"><span>WA Delivery Rate</span><span>99.2%</span></div><div class="pr-bar"><div class="pr-fill" style="width:99.2%;background:var(--wa);"></div></div></div>
+      <div class="pr"><div class="pr-h"><span>LI Click-through</span><span>12.4%</span></div><div class="pr-bar"><div class="pr-fill" style="width:12.4%;background:var(--li-lt);"></div></div></div>
+      <div class="pr"><div class="pr-h"><span>IG Story Views</span><span>6,210</span></div><div class="pr-bar"><div class="pr-fill" style="width:65%;background:var(--ig);"></div></div></div>
+      <div class="pr" style="margin-bottom:0"><div class="pr-h"><span>X Retweet Rate</span><span>8.7%</span></div><div class="pr-bar"><div class="pr-fill" style="width:8.7%;background:var(--tw);"></div></div></div>
+    </div>
+
+    <!-- Heatmap -->
+    <div class="kcard">
+      <div class="sec-title">🔥 Activity Heatmap</div>
+      <div class="hmap" id="hmap"></div>
+      <div class="hdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+      <div style="display:flex;align-items:center;gap:5px;margin-top:10px;font-size:10px;color:var(--sub);">
+        <span>Low</span>
+        <div style="display:flex;gap:2px;">
+          <div style="width:9px;height:9px;border-radius:2px;background:rgba(37,211,102,0.1);"></div>
+          <div style="width:9px;height:9px;border-radius:2px;background:rgba(37,211,102,0.3);"></div>
+          <div style="width:9px;height:9px;border-radius:2px;background:rgba(37,211,102,0.55);"></div>
+          <div style="width:9px;height:9px;border-radius:2px;background:rgba(37,211,102,0.8);"></div>
+          <div style="width:9px;height:9px;border-radius:2px;background:var(--wa);"></div>
+        </div>
+        <span>High</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts performance table -->
+  <div class="kcard">
+    <div class="sec-title">📜 Top Performing Posts</div>
+    <table class="dtable">
+      <thead><tr><th>Post</th><th>Platform</th><th>Reach</th><th>Engagements</th><th>Clicks</th><th>Date</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>🏆 WTC Named Best Hub 2025</td><td><span class="badge bb">LinkedIn</span></td><td>4,820</td><td>312 (6.5%)</td><td>88</td><td>Feb 25</td><td><span class="badge bg">Live</span></td></tr>
+        <tr><td>📱 50K Instagram Milestone 🎉</td><td><span class="badge bp">Instagram</span></td><td>8,430</td><td>2,109 (25%)</td><td>—</td><td>Feb 24</td><td><span class="badge bg">Live</span></td></tr>
+        <tr><td>🚀 Tech Summit Announcement</td><td><span class="badge bg">WA</span> <span class="badge bb">LI</span></td><td>3,951</td><td>890 (22.5%)</td><td>234</td><td>Feb 22</td><td><span class="badge bg">Live</span></td></tr>
+        <tr><td>⚡ New EV Charging Bays</td><td><span class="badge bg">WA</span> <span class="badge bt">X</span></td><td>2,200</td><td>410 (18.6%)</td><td>62</td><td>Feb 22</td><td><span class="badge bg">Live</span></td></tr>
+        <tr><td>🎨 Design Week Teaser</td><td><span class="badge bp">IG</span> <span class="badge bb">LI</span></td><td>—</td><td>—</td><td>—</td><td>Mar 8</td><td><span class="badge bo">Scheduled</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════ SUBSCRIBERS PANEL ═══════════════════ -->
+<div class="panel full" id="panel-subscribers" style="grid-column:1/-1;">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+    <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;flex-shrink:0;">👥 Audience Manager</div>
+    <input type="text" class="subs-search" placeholder="🔍 Search by name, platform or tag…" oninput="filterSubs(this.value)">
+    <select class="fsel" style="width:160px;" onchange="filterByPlat(this.value)">
+      <option value="all">All Platforms</option>
+      <option value="wa">💬 WhatsApp</option>
+      <option value="li">💼 LinkedIn</option>
+      <option value="ig">📸 Instagram</option>
+      <option value="tw">𝕏 Twitter</option>
+    </select>
+    <button class="btn-pri" onclick="toast('📥','Export Ready','CSV with 57,601 total audience records exported')">📥 Export All</button>
+  </div>
+  <div class="g4" style="margin-bottom:14px;">
+    <div class="kcard g"><div class="k-lbl">WA Active</div><div class="k-val">2,835</div><div class="k-chg up">↑ 43 this week</div></div>
+    <div class="kcard b"><div class="k-lbl">LI Followers</div><div class="k-val">1,204</div><div class="k-chg up">↑ 87 this month</div></div>
+    <div class="kcard p"><div class="k-lbl">IG Followers</div><div class="k-val">50.2K</div><div class="k-chg up">🎉 Milestone!</div></div>
+    <div class="kcard t"><div class="k-lbl">X Followers</div><div class="k-val">3,120</div><div class="k-chg up">↑ 56 this week</div></div>
+  </div>
+  <div class="stbl-wrap">
+    <table class="stbl">
+      <thead>
+        <tr>
+          <th><input type="checkbox" onchange="selAll(this)" style="accent-color:var(--wa)"></th>
+          <th>Name / Handle</th><th>Platform</th><th>Joined</th><th>Tags</th><th>Engagement</th><th>Status</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="subsTbody"></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- STATS BAR -->
+<div class="statsbar">
+  <div class="si">📊 <strong id="scMsgs">124</strong> messages today</div>
+  <div class="si">💬 <strong>2,847</strong> WA subs</div>
+  <div class="si">💼 <strong>1,204</strong> LI followers</div>
+  <div class="si">📸 <strong>50.2K</strong> IG followers</div>
+  <div class="si" style="margin-left:auto;color:var(--wa);">🟢 All Platforms Connected</div>
+</div>
+
+<!-- BROADCAST MODAL -->
+<div class="modal-ov" id="bcastModal">
+  <div class="modal">
+    <div class="mhdr"><h3>📢 <span>Send Broadcast</span></h3><button class="mcls" onclick="closeModal('bcastModal')">✕</button></div>
+    <div class="mbody">
+      <div class="fg">
+        <label class="flbl">Send to Platforms</label>
+        <div class="plat-toggles">
+          <div class="plat-toggle on-wa" onclick="this.className=this.className.includes('on-wa')?'plat-toggle':'plat-toggle on-wa'">💬 WhatsApp (2,847)</div>
+          <div class="plat-toggle on-li" onclick="this.className=this.className.includes('on-li')?'plat-toggle':'plat-toggle on-li'">💼 LinkedIn (1,204)</div>
+          <div class="plat-toggle" onclick="this.className=this.className.includes('on-ig')?'plat-toggle':'plat-toggle on-ig'">📸 Instagram</div>
+          <div class="plat-toggle" onclick="this.className=this.className.includes('on-tw')?'plat-toggle':'plat-toggle on-tw'">𝕏 Twitter</div>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="flbl">Message Type</label>
+        <select class="fsel">
+          <option>🎪 Event Announcement</option>
+          <option>📰 News Update</option>
+          <option>🎁 Special Offer</option>
+          <option>🚨 Important Alert</option>
+          <option>💡 Thought Leadership</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="flbl">Message Content</label>
+        <textarea class="ftxt" style="min-height:110px;">🏢 WTC Shamshabad Update!
+
+📅 Tech Summit 2026 — THIS FRIDAY, Feb 28 at 10 AM.
+
+🎤 AI & Innovation keynotes + 500+ attendees.
+📍 Hall A, Level 2
+
+Register: bit.ly/wtc-summit26
+
+#WTCShamshabad #TechSummit2026</textarea>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="flbl">Schedule</label><select class="fsel"><option>Send Now</option><option>Schedule Later</option><option>Save Draft</option></select></div>
+        <div class="fg"><label class="flbl">Media</label><select class="fsel"><option>Text Only</option><option>With Image</option><option>With Video</option><option>With PDF</option></select></div>
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn-sec" onclick="closeModal('bcastModal')">Cancel</button>
+      <button class="btn-pri" onclick="sendBcast()">📤 Broadcast to All Platforms</button>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div class="modal-ov" id="regModal">
+  <div class="modal">
+    <div class="mhdr"><h3>✅ <span>Event Registration</span></h3><button class="mcls" onclick="closeModal('regModal')">✕</button></div>
+    <div class="mbody">
+      <div class="rsteps">
+        <div class="rstep active" id="rs1">1 · Details</div>
+        <div class="rstep" id="rs2">2 · Confirm</div>
+        <div class="rstep" id="rs3">3 · Done</div>
+      </div>
+      <div id="rd1">
+        <div class="fg"><label class="flbl">Select Event</label>
+          <select class="fsel" id="regEv"><option>🚀 Tech Summit 2026 — Feb 28</option><option>🌿 Startup Pitch Day — Mar 5</option><option>🎨 Design Week — Mar 10–14</option></select>
+        </div>
+        <div class="fg"><label class="flbl">Full Name</label><input type="text" class="finp" id="regNm" placeholder="Your full name"></div>
+        <div class="fg"><label class="flbl">Contact (WhatsApp / LinkedIn / Email)</label><input type="text" class="finp" id="regPh" placeholder="+91 98765 43210 or LinkedIn URL"></div>
+        <div class="frow">
+          <div class="fg"><label class="flbl">Company</label><input type="text" class="finp" id="regCo" placeholder="Optional"></div>
+          <div class="fg"><label class="flbl">Ticket Type</label><select class="fsel"><option>🎟️ General — Free</option><option>⭐ Premium — ₹999</option><option>👑 VIP — ₹2,499</option></select></div>
+        </div>
+      </div>
+      <div id="rd2" style="display:none;">
+        <div style="background:var(--surface3);border-radius:10px;padding:16px;font-size:13px;line-height:2.1;">
+          <div>📅 <strong id="cfEv"></strong></div>
+          <div>👤 <strong id="cfNm"></strong></div>
+          <div>📞 <strong id="cfPh"></strong></div>
+          <div>🏢 <strong id="cfCo"></strong></div>
+          <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);color:var(--sub);font-size:11px;">Confirmation sent via WhatsApp & LinkedIn message.</div>
+        </div>
+      </div>
+      <div id="rd3" style="display:none;text-align:center;padding:16px 0;">
+        <div style="font-size:44px;margin-bottom:10px;">🎉</div>
+        <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--wa);margin-bottom:6px;">You're Registered!</div>
+        <div style="color:var(--sub);font-size:12px;">Confirmation sent to WhatsApp &amp; LinkedIn.</div>
+      </div>
+    </div>
+    <div class="mftr" id="regFtr">
+      <button class="btn-sec" onclick="closeModal('regModal')">Cancel</button>
+      <button class="btn-pri" onclick="nextReg()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOT INFO MODAL -->
+<div class="modal-ov" id="infoModal">
+  <div class="modal">
+    <div class="mhdr"><h3>ℹ️ <span>Platform Status</span></h3><button class="mcls" onclick="closeModal('infoModal')">✕</button></div>
+    <div class="mbody">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div style="background:rgba(37,211,102,0.07);border:1px solid rgba(37,211,102,0.2);border-radius:10px;padding:13px;">
+          <div style="font-size:11px;color:var(--sub);margin-bottom:3px;">WhatsApp Business</div>
+          <div style="font-family:'JetBrains Mono',monospace;color:var(--wa);font-size:12px;">● Connected · v2.3.1</div>
+          <div style="font-size:10px;color:var(--sub);margin-top:4px;">Meta Business API · 99.98% uptime</div>
+        </div>
+        <div style="background:rgba(10,102,194,0.07);border:1px solid rgba(10,102,194,0.2);border-radius:10px;padding:13px;">
+          <div style="font-size:11px;color:var(--sub);margin-bottom:3px;">LinkedIn Pages</div>
+          <div style="font-family:'JetBrains Mono',monospace;color:var(--li-lt);font-size:12px;">● Connected · API v2</div>
+          <div style="font-size:10px;color:var(--sub);margin-top:4px;">Auto-post · DM automation active</div>
+        </div>
+        <div style="background:rgba(225,48,108,0.07);border:1px solid rgba(225,48,108,0.2);border-radius:10px;padding:13px;">
+          <div style="font-size:11px;color:var(--sub);margin-bottom:3px;">Instagram Business</div>
+          <div style="font-family:'JetBrains Mono',monospace;color:var(--ig-lt);font-size:12px;">● Connected · Graph API</div>
+          <div style="font-size:10px;color:var(--sub);margin-top:4px;">Stories, Reels &amp; DM automation</div>
+        </div>
+        <div style="background:rgba(29,161,242,0.07);border:1px solid rgba(29,161,242,0.2);border-radius:10px;padding:13px;">
+          <div style="font-size:11px;color:var(--sub);margin-bottom:3px;">Twitter / X</div>
+          <div style="font-family:'JetBrains Mono',monospace;color:var(--tw);font-size:12px;">● Connected · X API v2</div>
+          <div style="font-size:10px;color:var(--sub);margin-top:4px;">Auto-tweet &amp; reply automation</div>
+        </div>
+      </div>
+      <div style="background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.18);border-radius:10px;padding:12px;font-size:11px;color:#b8a070;line-height:1.7;">
+        <strong style="color:var(--gold-lt);">WA Keywords:</strong> hi · events · news · offers · map · contact · subscribe · parking · register · feedback<br>
+        <strong style="color:var(--gold-lt);">LinkedIn:</strong> Thought leadership · event posts · company updates · DM auto-reply<br>
+        <strong style="color:var(--gold-lt);">Instagram:</strong> Carousel posts · Stories · Reel captions · DM keyword triggers<br>
+        <strong style="color:var(--gold-lt);">Twitter/X:</strong> Event threads · news tweets · hashtag monitoring
+      </div>
+    </div>
+    <div class="mftr"><button class="btn-pri" onclick="closeModal('infoModal')">Close</button></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toastEl">
+  <div class="ti" id="toastIco">✅</div>
+  <div class="tt"><h5 id="toastTtl">Done!</h5><p id="toastDsc">Action completed.</p></div>
+</div>
+
+<script>
+// ─── PLATFORM STATE ───────────────────────────────────────
+const platforms = {
+  wa:  { name:'WhatsApp Business', color:'#25D366', bg:'linear-gradient(135deg,#128C7E,#25D366)', status:'WhatsApp Business · Responds instantly', emoji:'💬', statusTxt:'WhatsApp Live' },
+  li:  { name:'LinkedIn Bot',      color:'#378FE9', bg:'linear-gradient(135deg,#0A66C2,#378FE9)', status:'LinkedIn Pages · Auto-reply active',    emoji:'💼', statusTxt:'LinkedIn Active' },
+  ig:  { name:'Instagram Bot',     color:'#F77737', bg:'linear-gradient(135deg,#E1306C,#F77737)', status:'Instagram Business · DM automation on',  emoji:'📸', statusTxt:'Instagram Live' },
+  tw:  { name:'Twitter/X Bot',     color:'#1DA1F2', bg:'linear-gradient(135deg,#0d8ecf,#1DA1F2)', status:'Twitter/X · Auto-tweet active',          emoji:'𝕏',  statusTxt:'Twitter Live' },
+};
+let activePlatform = 'wa';
+let activeQuickPlatform = 'wa';
+let regStep = 1;
+let msgCount = 124;
+let isMuted = false;
+
+// ─── SWITCH PLATFORM (top bar) ────────────────────────────
+function switchPlatform(p, btn) {
+  activePlatform = p;
+  document.querySelectorAll('.plat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const pl = platforms[p];
+  // header strip colour
+  const strips = { wa:'var(--wa)', li:'var(--li-lt)', ig:'var(--ig-lt)', tw:'var(--tw)' };
+  document.getElementById('platStrip').style.background = `linear-gradient(90deg,${pl.color},transparent)`;
+  document.getElementById('botAvaInner').style.background = pl.bg;
+  document.getElementById('botName').textContent = pl.name;
+  document.getElementById('botStatus').textContent = pl.status;
+  document.getElementById('botStatus').style.color = pl.color;
+  document.getElementById('botStatus').querySelector ? null : null;
+
+  // Update stat colour
+  document.querySelectorAll('.tb-stat .val').forEach(v => v.style.color = pl.color);
+  document.getElementById('tbStatusTxt').textContent = pl.statusTxt;
+  document.getElementById('tbStatus').style.borderColor = `${pl.color}44`;
+  document.getElementById('tbStatus').style.color = pl.color;
+  document.getElementById('tbStatus').style.background = `${pl.color}14`;
+
+  // Nav tab active colour
+  document.querySelectorAll('.nav-tab.active').forEach(t => { t.style.color = pl.color; t.style.borderBottomColor = pl.color; });
+  document.querySelectorAll('.si strong').forEach(s => s.style.color = pl.color);
+
+  const statMap = { wa:['14.2K','8,430','38'], li:['1,204','4,820','12'], ig:['50.2K','8,430','24'], tw:['3,120','2,890','15'] };
+  const s = statMap[p];
+  document.getElementById('statFollowers').textContent = s[0];
+  document.getElementById('statReach').textContent = s[1];
+  document.getElementById('statPosts').textContent = s[2];
+
+  // Update qr btn colour
+  document.querySelectorAll('.qr-btn').forEach(b => { b.style.borderColor = pl.color; b.style.color = pl.color; });
+  document.querySelector('.send-btn').style.background = pl.color;
+  document.querySelector('.chat-inp').style.setProperty('--focus-col', pl.color);
+
+  // select the matching plat-quick btn
+  selectPlatQuick(p);
+  addPlatformMessage(p);
+}
+
+function selectPlatQuick(p) {
+  activeQuickPlatform = p;
+  document.querySelectorAll('.pq-btn').forEach(b => {
+    const cls = b.id.replace('pq-','');
+    b.classList.toggle('sel', cls === p);
+  });
+}
+
+function addPlatformMessage(p) {
+  const msgs = {
+    li: `💼 <strong>WTC Shamshabad LinkedIn Bot</strong><br><br>Welcome! I can help you with:<br>• Company updates &amp; thought leadership<br>• Event announcements<br>• Professional networking at WTC<br>• Job postings &amp; tenant spotlights<br><br>Type your query or tap a button below 👇`,
+    ig: `📸 <strong>WTC Shamshabad Instagram Bot</strong><br><br>Hey! 👋 DM us for:<br>• Event highlights &amp; sneak peeks<br>• Photo contest entries<br>• Behind-the-scenes content<br>• Special IG-exclusive offers<br><br>Tap below to explore! 🔽`,
+    tw: `𝕏 <strong>WTC Shamshabad on Twitter</strong><br><br>Hi! We're live on X 🚀<br>• Event threads &amp; live coverage<br>• Breaking news from WTC<br>• Retweet opportunities<br>• Community discussions<br><br>What can we help with? 👇`,
+  };
+  if(!msgs[p]) return;
+  addOutMsg(`Switched to ${platforms[p].name} 👋`);
+  addTyping();
+  setTimeout(() => {
+    removeTyping();
+    addBotMsg(msgs[p], ['🎪 Events','📰 News','🎁 Offers','📋 Main Menu']);
+  }, 900);
+}
+
+// ─── TABS ─────────────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.nav-tab').forEach(t => { t.classList.remove('active'); t.style.color=''; t.style.borderBottomColor=''; });
+  el.classList.add('active');
+  el.style.color = platforms[activePlatform].color;
+  el.style.borderBottomColor = platforms[activePlatform].color;
+
+  const sidebar = document.getElementById('chatSidebar');
+  document.querySelectorAll('.panel,.chat-col,.sidebar').forEach(p => {
+    p.classList.remove('active');
+    if(p.style) p.style.display='none';
+  });
+
+  if(name === 'chat') {
+    sidebar.style.display='flex';
+    document.getElementById('panel-chat').style.display='flex';
+  } else {
+    sidebar.style.display='none';
+    const el2 = document.getElementById('panel-'+name);
+    el2.classList.add('active');
+    el2.style.display='flex';
+    if(name==='analytics') buildAnalytics();
+    if(name==='calendar') buildCalendar();
+    if(name==='subscribers') renderSubs('','all');
+    if(name==='compose') { updatePrev(); updateCCCompose(); }
+  }
+}
+// init
+document.getElementById('panel-chat').style.display='flex';
+document.getElementById('chatSidebar').style.display='flex';
+
+// ─── BOT RESPONSES ────────────────────────────────────────
+const numCmds = {1:'events',2:'news',3:'offers',4:'map',5:'contact',6:'subscribe',7:'register',8:'parking'};
+const botR = {
+  hi:{ text:`👋 Hello! Welcome back to <strong>WTC Shamshabad</strong> multi-platform bot!\n\nActive on: 💬 WhatsApp · 💼 LinkedIn · 📸 Instagram · 𝕏 Twitter/X\n\n1️⃣ Upcoming Events\n2️⃣ News & Updates\n3️⃣ Special Offers\n4️⃣ Building Directory\n5️⃣ Contact Support\n6️⃣ Subscribe to Alerts\n7️⃣ Event Registration\n8️⃣ Parking Info`, qr:['🎪 Events','📰 News','🎁 Offers','🗺️ Directory','🔔 Subscribe'] },
+  map:{ text:`🗺️ <strong>WTC Shamshabad Building Directory</strong>\n\n📍 Rajiv Gandhi Intl. Airport Road, Shamshabad, Hyderabad – 501218\n\n🏢 Ground – F&B, Retail, Reception\n🏢 Level 1 – Co-working & Meeting Rooms\n🏢 Level 2 – Conference Halls A, B, C\n🏢 Level 3 – Premium Offices\n🏢 Level 4 – Executive Suites\n🏢 Rooftop – Event Space & Lounge\n\n🚗 Parking: B1–B4 underground, EV charging on B2\n📞 Reception: +91 40 6800 1234`, qr:['🅿️ Parking','📞 Contact','📋 Menu'] },
+  contact:{ text:`📞 <strong>WTC Shamshabad Contacts</strong>\n\n🏢 Reception: +91 40 6800 1234\n📧 info@wtcshamshabad.in\n🆘 Security (24/7): +91 40 6800 9999\n🔧 Facilities: +91 40 6800 2222\n🎪 Events: +91 40 6800 3333\n\n💼 LinkedIn: linkedin.com/company/wtcshamshabad\n📸 Instagram: @wtcshamshabad\n𝕏 Twitter: @WTCShamshabad\n\n⏰ Mon–Sat: 8 AM–10 PM · Sunday: 10 AM–6 PM`, qr:['📞 Call Now','📧 Email Us','📋 Menu'] },
+  subscribe:{ text:`🔔 <strong>Subscribed to WTC Shamshabad!</strong>\n\nYou'll get updates on:\n✅ WhatsApp – instant event alerts\n✅ LinkedIn – professional updates\n✅ Instagram – visual content & stories\n✅ Twitter/X – live event coverage\n\nPreferences:\n• ALL – All platforms\n• WA ONLY – WhatsApp only\n• LI ONLY – LinkedIn only\n• STOP – Unsubscribe`, qr:['ALL Platforms','WA ONLY','LI ONLY','📋 Menu'] },
+  parking:{ text:`🅿️ <strong>WTC Shamshabad Parking</strong>\n\n📍 4 Underground Levels (B1–B4)\n\n💰 Rates:\n• 0–2 hrs: ₹50 · 2–6 hrs: ₹100\n• 6–12 hrs: ₹150 · Full day: ₹200\n\n⚡ EV Charging (Level B2):\n• 10 fast-charge bays\n• Free for tenants in 2026!\n• ₹30/session for visitors\n\n🎫 Season Pass: ₹2,499/mo — 8 spots left!\n📞 Parking: +91 40 6800 5555`, qr:['🎫 Season Pass','📞 Contact','🗺️ Map','📋 Menu'] },
+  feedback:{ text:`⭐ <strong>Share Your Feedback!</strong>\n\nRate your experience at WTC Shamshabad:\n⭐ 1 – Poor · ⭐⭐ 2 – Fair\n⭐⭐⭐ 3 – Good · ⭐⭐⭐⭐ 4 – Very Good\n⭐⭐⭐⭐⭐ 5 – Excellent\n\nYour feedback helps us improve all platforms!\nAlso review us on Google & LinkedIn 🙏`, qr:['⭐⭐⭐⭐⭐ Excellent!','⭐⭐⭐⭐ Very Good','⭐⭐⭐ Good','📋 Menu'] },
+  register:{ text:`✅ <strong>Event Registration</strong>\n\nRegister for our upcoming events:\n🚀 Tech Summit 2026 — Feb 28\n🌿 Startup Pitch Day — Mar 5\n🎨 Design Week — Mar 10–14\n\nFill the form opening shortly, or DM us on LinkedIn for group bookings!`, qr:['🚀 Tech Summit','🌿 Pitch Day','🎨 Design Week','📋 Menu'] },
+  default:{ text:`🤖 Got your message! Let me connect you with the right info.\n\nFor detailed queries:\n📞 +91 40 6800 1234\n💼 linkedin.com/company/wtcshamshabad\n📸 @wtcshamshabad\n\nOr explore options below 👇`, qr:['🎪 Events','📰 News','📞 Contact','📋 Menu'] },
+};
+
+function getTime() { return new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}); }
+function scrollBot() { const c=document.getElementById('chatMsgs'); setTimeout(()=>c.scrollTop=c.scrollHeight,60); }
+
+function addOutMsg(text) {
+  const c = document.getElementById('chatMsgs');
+  const g = document.createElement('div'); g.className='msg-grp out';
+  g.innerHTML=`<div class="bubble out">${text}<div class="btime">${getTime()} <span class="tick">✓✓</span></div></div>`;
+  c.appendChild(g); msgCount++;
+  document.getElementById('scMsgs').textContent = msgCount;
+  scrollBot();
+}
+
+function addTyping() {
+  const c=document.getElementById('chatMsgs'),g=document.createElement('div');
+  g.className='msg-grp in';g.id='tyGrp';
+  g.innerHTML=`<div class="typing-bub"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>`;
+  c.appendChild(g);scrollBot();
+}
+function removeTyping(){const t=document.getElementById('tyGrp');if(t)t.remove();}
+
+function addBotMsg(html, qrs) {
+  const c=document.getElementById('chatMsgs'),g=document.createElement('div');
+  g.className='msg-grp in';
+  g.innerHTML=`<div class="bubble in">${html.replace(/\n/g,'<br>')}<div class="btime">${getTime()}</div></div>
+    <div class="reaction-row">
+      <div class="react" onclick="toggleReact(this)">👍</div>
+      <div class="react" onclick="toggleReact(this)">❤️</div>
+      <div class="react" onclick="toggleReact(this)">😊</div>
+      <div class="react" onclick="toggleReact(this)">🙏</div>
+    </div>`;
+  c.appendChild(g);
+  const qw=document.getElementById('qrWrap');qw.innerHTML='';
+  if(qrs&&qrs.length) qrs.forEach(q=>{
+    const b=document.createElement('button');b.className='qr-btn';b.textContent=q;
+    b.style.borderColor=platforms[activePlatform].color;
+    b.style.color=platforms[activePlatform].color;
+    b.onclick=()=>sendQ(qrToCmd(q));qw.appendChild(b);
+  });
+  scrollBot();
+}
+
+function addEventsCard() {
+  const c=document.getElementById('chatMsgs'),g=document.createElement('div');
+  g.className='msg-grp in';
+  g.innerHTML=`<div class="bubble in">
+    <div class="b-tag">📅 UPCOMING EVENTS — WTC SHAMSHABAD</div>
+    <div class="card-grid">
+      <div class="ev-card"><h5>🚀 Tech Summit 2026</h5><p>AI &amp; Innovation — Keynotes + 500 leaders.</p><div class="ev-meta"><span>📅 Feb 28</span><span>🕙 10 AM–6 PM</span><span>📍 Hall A, L2</span></div></div>
+      <div class="ev-card"><h5>🌿 Startup Pitch Day</h5><p>20 startups · ₹50L funding. Open to all!</p><div class="ev-meta"><span>📅 Mar 5</span><span>🕑 2–7 PM</span><span>📍 Rooftop</span></div></div>
+      <div class="ev-card"><h5>🎨 Design Week Hyderabad</h5><p>Exhibitions, workshops &amp; live installations.</p><div class="ev-meta"><span>📅 Mar 10–14</span><span>📍 Level 1 Gallery</span></div></div>
+    </div><br>Register via WA, LinkedIn or the website!
+    <div class="btime">${getTime()}</div>
+  </div>
+  <div class="reaction-row"><div class="react" onclick="toggleReact(this)">🎉</div><div class="react" onclick="toggleReact(this)">👍</div><div class="react" onclick="toggleReact(this)">🔖</div></div>`;
+  c.appendChild(g);
+  const qw=document.getElementById('qrWrap');
+  qw.innerHTML=`<button class="qr-btn" onclick="openReg()" style="border-color:var(--wa);color:var(--wa)">✅ Register Now</button>
+    <button class="qr-btn" onclick="sendQ('lipost')" style="border-color:var(--li-lt);color:var(--li-lt)">💼 View on LinkedIn</button>
+    <button class="qr-btn" onclick="sendQ('news')" style="border-color:var(--wa);color:var(--wa)">📰 News</button>
+    <button class="qr-btn" onclick="sendQ('hi')" style="border-color:var(--wa);color:var(--wa)">🏠 Menu</button>`;
+  scrollBot();
+}
+
+function addNewsCard() {
+  const c=document.getElementById('chatMsgs'),g=document.createElement('div');
+  g.className='msg-grp in';
+  g.innerHTML=`<div class="bubble in">
+    <div class="b-tag">📰 NEWS & SOCIAL UPDATES</div>
+    <div class="card-grid">
+      <div class="ev-card"><h5>🏆 WTC Named Best Hub 2025</h5><p>Recognised by CREDAI Hyderabad as most innovative commercial hub. Shared across all platforms!</p><div class="ev-meta"><span>📅 Feb 25</span><span>💼 LI: 4.8K impressions</span></div></div>
+      <div class="ev-card"><h5>📱 Instagram — 50K Followers!</h5><p>Celebrating with a giveaway! Follow @wtcshamshabad to enter. Share on stories!</p><div class="ev-meta"><span>📅 Feb 24</span><span>📸 IG: 8.4K reach</span></div></div>
+      <div class="ev-card"><h5>⚡ 10 New EV Charging Bays</h5><p>Now operational on B2. Free for tenants in 2026! Announced on Twitter first.</p><div class="ev-meta"><span>📅 Feb 22</span><span>𝕏 X: 2.1K impressions</span></div></div>
+    </div>
+    <div class="btime">${getTime()}</div>
+  </div>
+  <div class="reaction-row"><div class="react" onclick="toggleReact(this)">🎉</div><div class="react" onclick="toggleReact(this)">👏</div></div>`;
+  c.appendChild(g);
+  const qw=document.getElementById('qrWrap');
+  qw.innerHTML=`<button class="qr-btn" onclick="sendQ('events')" style="border-color:var(--wa);color:var(--wa)">🎪 Events</button>
+    <button class="qr-btn" onclick="sendQ('offers')" style="border-color:var(--wa);color:var(--wa)">🎁 Offers</button>
+    <button class="qr-btn" onclick="sendQ('subscribe')" style="border-color:var(--wa);color:var(--wa)">🔔 Subscribe</button>
+    <button class="qr-btn" onclick="sendQ('hi')" style="border-color:var(--wa);color:var(--wa)">🏠 Menu</button>`;
+  scrollBot();
+}
+
+function addOffersCard() {
+  const c=document.getElementById('chatMsgs'),g=document.createElement('div');
+  g.className='msg-grp in';
+  g.innerHTML=`<div class="bubble in">
+    <div class="b-tag">🎁 EXCLUSIVE OFFERS</div>
+    <div class="card-grid">
+      <div class="ev-card"><h5>☕ 30% OFF at The Brew Collective</h5><p>Code <strong style="color:var(--gold-lt)">WTC30</strong> · Ground Floor, Shop 4</p><div class="ev-meta"><span>⏳ Ends Mar 2</span><span>📸 IG exclusive!</span></div></div>
+      <div class="ev-card"><h5>💻 Free Meeting Room — 2 Hours</h5><p>Code <strong style="color:var(--gold-lt)">WTCMEET</strong> · Level 1 rooms · March only</p><div class="ev-meta"><span>⏳ March Only</span><span>📞 Ext. 2200</span></div></div>
+      <div class="ev-card"><h5>🅿️ Season Parking — ₹2,499/mo</h5><p>Only <strong style="color:var(--red)">8 spots left!</strong> Book via WhatsApp.</p><div class="ev-meta"><span>⏳ Limited!</span></div></div>
+    </div>
+    <div class="btime">${getTime()}</div>
+  </div>
+  <div class="reaction-row"><div class="react" onclick="toggleReact(this)">🔥</div><div class="react" onclick="toggleReact(this)">❤️</div></div>`;
+  c.appendChild(g);
+  const qw=document.getElementById('qrWrap');
+  qw.innerHTML=`<button class="qr-btn" onclick="sendQ('events')" style="border-color:var(--wa);color:var(--wa)">🎪 Events</button>
+    <button class="qr-btn" onclick="sendQ('contact')" style="border-color:var(--wa);color:var(--wa)">📞 Book Now</button>
+    <button class="qr-btn" onclick="sendQ('hi')" style="border-color:var(--wa);color:var(--wa)">🏠 Menu</button>`;
+  scrollBot();
+}
+
+function addLinkedInCard() {
+  const c=document.getElementById('chatMsgs'),g=document.createElement('div');
+  g.className='msg-grp in';
+  g.innerHTML=`<div class="bubble in">
+    <div class="b-tag">💼 LATEST LINKEDIN POST</div>
+    <div class="li-card">
+      <div class="li-header">
+        <div class="li-ava">WTC</div>
+        <div><div class="li-name">WTC Shamshabad</div><div class="li-role">Commercial Hub · 1,204 followers</div></div>
+      </div>
+      <div class="li-body">🏆 Proud to be named <strong>Best Commercial Hub 2025</strong> by CREDAI Hyderabad!<br><br>This recognition belongs to our amazing tenants, partners, and the incredible Hyderabad business community. We're just getting started. 🚀<br><br>📅 Tech Summit 2026 is coming up — register below!</div>
+      <div class="li-tags"><span class="li-tag">#WTCShamshabad</span> <span class="li-tag">#Hyderabad</span> <span class="li-tag">#CommercialRealEstate</span> <span class="li-tag">#Innovation</span></div>
+      <div class="li-stats">
+        <div class="li-stat">👍 <span>312</span> reactions</div>
+        <div class="li-stat">💬 <span>48</span> comments</div>
+        <div class="li-stat">🔁 <span>87</span> reposts</div>
+        <div class="li-stat">👁️ <span>4.8K</span> impressions</div>
+      </div>
+    </div>
+    <div class="btime">${getTime()}</div>
+  </div>
+  <div class="reaction-row"><div class="react" onclick="toggleReact(this)">👍</div><div class="react" onclick="toggleReact(this)">🎉</div><div class="react" onclick="toggleReact(this)">💼</div></div>`;
+  c.appendChild(g);
+  document.getElementById('qrWrap').innerHTML=`
+    <button class="qr-btn" onclick="sendQ('events')" style="border-color:var(--li-lt);color:var(--li-lt)">🎪 Events</button>
+    <button class="qr-btn" onclick="sendQ('register')" style="border-color:var(--li-lt);color:var(--li-lt)">✅ Register</button>
+    <button class="qr-btn" onclick="sendQ('news')" style="border-color:var(--li-lt);color:var(--li-lt)">📰 More News</button>
+    <button class="qr-btn" onclick="sendQ('hi')" style="border-color:var(--wa);color:var(--wa)">🏠 Menu</button>`;
+  scrollBot();
+}
+
+function addInstagramCard() {
+  const c=document.getElementById('chatMsgs'),g=document.createElement('div');
+  g.className='msg-grp in';
+  g.innerHTML=`<div class="bubble in">
+    <div class="b-tag">📸 LATEST INSTAGRAM POST</div>
+    <div class="ig-card">
+      <div class="ig-img">🏢✨</div>
+      <div class="ig-caption"><strong>WTC Shamshabad</strong> — Where Hyderabad's business future is being built. 🚀<br><br>📅 Tech Summit 2026 is happening THIS Friday! Come see AI in action, meet 500+ innovators, and be part of the change.<br><br>Swipe for highlights from last year's event ➡️</div>
+      <div class="ig-tags">#WTCShamshabad #TechSummit2026 #Hyderabad #Startup #Innovation #CoWorkingSpace</div>
+      <div class="ig-stats">
+        <div class="ig-stat">❤️ <span>2,109</span></div>
+        <div class="ig-stat">💬 <span>84</span></div>
+        <div class="ig-stat">🔁 <span>312</span></div>
+        <div class="ig-stat">👁️ <span>8.4K</span> reach</div>
+      </div>
+    </div>
+    <div class="btime">${getTime()}</div>
+  </div>
+  <div class="reaction-row"><div class="react" onclick="toggleReact(this)">❤️</div><div class="react" onclick="toggleReact(this)">🔥</div><div class="react" onclick="toggleReact(this)">😍</div></div>`;
+  c.appendChild(g);
+  document.getElementById('qrWrap').innerHTML=`
+    <button class="qr-btn" onclick="sendQ('events')" style="border-color:var(--ig-lt);color:var(--ig-lt)">🎪 Events</button>
+    <button class="qr-btn" onclick="sendQ('offers')" style="border-color:var(--ig-lt);color:var(--ig-lt)">🎁 Offers</button>
+    <button class="qr-btn" onclick="sendQ('subscribe')" style="border-color:var(--ig-lt);color:var(--ig-lt)">🔔 Follow Us</button>
+    <button class="qr-btn" onclick="sendQ('hi')" style="border-color:var(--wa);color:var(--wa)">🏠 Menu</button>`;
+  scrollBot();
+}
+
+function qrToCmd(q) {
+  const l=q.toLowerCase().replace(/^[^a-z]*/,'');
+  const m={'events':'events','news':'news','offers':'offers','directory':'map','map':'map',
+    'parking':'parking','subscribe':'subscribe','contact':'contact','register':'register',
+    'main menu':'hi','menu':'hi','feedback':'feedback','call now':'contact',
+    'linkedin':'lipost','instagram':'igpost','view on linkedin':'lipost',
+    'tech summit':'register','pitch day':'register','design week':'register',
+    'all platforms':'subscribe','wa only':'subscribe','li only':'subscribe',
+    'excellent!':'f5','very good':'f4','good':'f3','follow us':'subscribe',
+    'more news':'news','season pass':'parking','book now':'contact',
+  };
+  for(const [k,v] of Object.entries(m)) if(l.includes(k)) return v;
+  return 'default';
+}
+
+function sendQ(cmd) {
+  const labels = {
+    hi:'Hi 👋',events:'🎪 Events',news:'📰 News',offers:'🎁 Offers',map:'🗺️ Directory',
+    contact:'📞 Contact',subscribe:'🔔 Subscribe',parking:'🅿️ Parking',register:'✅ Register',
+    feedback:'⭐ Feedback',lipost:'💼 LinkedIn Post',igpost:'📸 Instagram Post',
+    f5:'⭐⭐⭐⭐⭐ Excellent!',f4:'⭐⭐⭐⭐ Very Good',f3:'⭐⭐⭐ Good',
+  };
+  addOutMsg(labels[cmd]||cmd);
+  addTyping();
+  const delay=900+Math.random()*500;
+  setTimeout(()=>{
+    removeTyping();
+    if(cmd==='events'){addEventsCard();return;}
+    if(cmd==='news'){addNewsCard();return;}
+    if(cmd==='offers'){addOffersCard();return;}
+    if(cmd==='lipost'){addLinkedInCard();return;}
+    if(cmd==='igpost'){addInstagramCard();return;}
+    if(cmd==='register'){addBotMsg(botR.register.text,botR.register.qr);setTimeout(openReg,1200);return;}
+    if(cmd==='f5'){addBotMsg(`⭐⭐⭐⭐⭐ <strong>Thank you for the 5-star review!</strong>\n\nWe've shared your feedback across our team. Your kind words mean everything to us. See you at WTC Shamshabad! 🙏\n\nPlease also leave a review on Google &amp; LinkedIn!`,['📋 Menu','🎪 Events']);return;}
+    if(cmd==='f4'){addBotMsg(`⭐⭐⭐⭐ <strong>Thanks for 4 stars!</strong>\n\nWe're glad you had a great visit. Tell us how to make it 5 stars:\n📧 feedback@wtcshamshabad.in`,['📋 Menu']);return;}
+    if(cmd==='f3'){addBotMsg(`⭐⭐⭐ <strong>Thanks for your feedback!</strong>\n\nWe take all feedback seriously:\n📧 feedback@wtcshamshabad.in\n💼 linkedin.com/company/wtcshamshabad`,['📋 Menu']);return;}
+    const r=botR[cmd]||botR.default;
+    addBotMsg(r.text,r.qr);
+  },delay);
+  document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('btn-'+cmd);if(el)el.classList.add('active');
+}
+
+function triggerCmd(cmd,el){
+  document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');sendQ(cmd);
+}
+
+function sendMsg(){
+  const inp=document.getElementById('chatInp');
+  const text=inp.value.trim(); if(!text)return;
+  addOutMsg(text); inp.value='';
+  document.getElementById('charCnt').textContent='';
+  addTyping();
+  const l=text.toLowerCase();
+  let cmd='default';
+  const n=parseInt(text);
+  if(n>=1&&n<=8)cmd=numCmds[n];
+  else if(l.includes('event')||l.includes('summit'))cmd='events';
+  else if(l.includes('news')||l.includes('update'))cmd='news';
+  else if(l.includes('offer')||l.includes('deal')||l.includes('discount'))cmd='offers';
+  else if(l.includes('map')||l.includes('directory')||l.includes('floor'))cmd='map';
+  else if(l.includes('contact')||l.includes('phone'))cmd='contact';
+  else if(l.includes('subscri')||l.includes('alert'))cmd='subscribe';
+  else if(l.includes('park')||l.includes('ev')||l.includes('charging'))cmd='parking';
+  else if(l.includes('register')||l.includes('book')||l.includes('ticket'))cmd='register';
+  else if(l.includes('feedback')||l.includes('rate')||l.includes('review')||l.includes('star'))cmd='feedback';
+  else if(l.includes('linkedin')||l.includes('li '))cmd='lipost';
+  else if(l.includes('instagram')||l.includes(' ig ')||l.includes('photo'))cmd='igpost';
+  else if(l.includes('hi')||l.includes('hello')||l.includes('menu')||l.includes('start'))cmd='hi';
+  setTimeout(()=>{
+    removeTyping();
+    if(cmd==='events'){addEventsCard();return;}
+    if(cmd==='news'){addNewsCard();return;}
+    if(cmd==='offers'){addOffersCard();return;}
+    if(cmd==='lipost'){addLinkedInCard();return;}
+    if(cmd==='igpost'){addInstagramCard();return;}
+    if(cmd==='register'){addBotMsg(botR.register.text,botR.register.qr);setTimeout(openReg,1200);return;}
+    const r=botR[cmd]||botR.default;
+    addBotMsg(r.text,r.qr);
+  },1000+Math.random()*600);
+}
+
+function updateCC(v){const e=document.getElementById('charCnt');e.textContent=v.length>0?v.length+'/1024':'';}
+
+// ─── REACTIONS ────────────────────────────────────────────
+function toggleReact(el){
+  el.classList.toggle('mine');
+  const t=el.textContent,n=parseInt(t.match(/\d+/)?.[0]||'0');
+  el.textContent=el.classList.contains('mine')?t.replace(/\s*\d+$/,'')+' '+(n+1):n>1?t.replace(/\s*\d+$/,'')+' '+(n-1):t.replace(/\s*\d+$/,'');
+}
+
+// ─── SEARCH ───────────────────────────────────────────────
+function toggleSearch(){
+  const s=document.getElementById('searchStrip');
+  s.classList.toggle('visible');
+  if(s.classList.contains('visible'))document.getElementById('searchInp').focus();
+  else{doSearch('');document.getElementById('searchCnt').textContent='';}
+}
+function doSearch(q){
+  let n=0;
+  document.querySelectorAll('.bubble').forEach(b=>{
+    b.classList.remove('highlighted');
+    if(q&&b.textContent.toLowerCase().includes(q.toLowerCase())){b.classList.add('highlighted');n++;}
+  });
+  document.getElementById('searchCnt').textContent=q?`${n} result${n!==1?'s':''}` :'';
+}
+
+// ─── MUTE ─────────────────────────────────────────────────
+function toggleMute(btn){
+  isMuted=!isMuted;btn.textContent=isMuted?'🔕':'🔔';
+  toast(isMuted?'🔕':'🔔',isMuted?'Muted':'Unmuted',isMuted?'Notifications silenced':'Notifications enabled');
+}
+
+// ─── CLEAR CHAT ───────────────────────────────────────────
+function clearChat(){
+  if(!confirm('Clear all messages?'))return;
+  document.getElementById('chatMsgs').innerHTML=`<div class="date-div"><span>Today, February 27 2026</span></div>
+    <div class="msg-grp in"><div class="bubble in">🏢 Chat cleared. How can I help?<br><br>Reply with 1–8 or tap below 👇<div class="btime">${getTime()}</div></div></div>`;
+  document.getElementById('qrWrap').innerHTML=`
+    <button class="qr-btn" onclick="sendQ('events')">🎪 Events</button>
+    <button class="qr-btn" onclick="sendQ('news')">📰 News</button>
+    <button class="qr-btn" onclick="sendQ('lipost')">💼 LinkedIn</button>
+    <button class="qr-btn" onclick="sendQ('igpost')">📸 Instagram</button>`;
+  toast('🗑️','Cleared','Chat messages removed');
+}
+
+// ─── SELECT CONTACT ───────────────────────────────────────
+function selectContact(el){
+  document.querySelectorAll('.contact-item').forEach(i=>i.classList.remove('selected'));
+  el.classList.add('selected');
+  const b=el.querySelector('.unread');if(b)b.remove();
+}
+
+// ─── EMOJI ────────────────────────────────────────────────
+const emojis=['😊','😂','❤️','🙏','👍','🎉','🔥','✅','📅','🏢','🎪','📰','🎁','🗺️','📞','🚀','⭐','🌿','🎨','🅿️','⚡','💻','☕','💰','🎤','📍','⏳','🔔','📢','💡','👋','🙌','💪','🤝','😎','💼','📸','𝕏','💬'];
+(()=>{
+  const g=document.getElementById('emojiGrid');
+  emojis.forEach(e=>{
+    const b=document.createElement('button');b.className='em-btn';b.textContent=e;
+    b.onclick=()=>{const i=document.getElementById('chatInp');i.value+=e;i.focus();updateCC(i.value);};
+    g.appendChild(b);
+  });
+})();
+function toggleEmoji(){document.getElementById('emojiPk').classList.toggle('visible');}
+document.addEventListener('click',e=>{if(!e.target.closest('#emojiPk')&&!e.target.closest('.inp-btn'))document.getElementById('emojiPk').classList.remove('visible');});
+
+// ─── MODALS ───────────────────────────────────────────────
+function openBcast(){document.getElementById('bcastModal').classList.add('active');}
+function showBotInfo(){document.getElementById('infoModal').classList.add('active');}
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+function sendBcast(){closeModal('bcastModal');toast('📢','Broadcast Sent!','Message delivered across all connected platforms');}
+
+document.querySelectorAll('.modal-ov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active');}));
+
+function openReg(){regStep=1;updReg();document.getElementById('regModal').classList.add('active');}
+function nextReg(){
+  if(regStep===1){
+    const nm=document.getElementById('regNm').value.trim();
+    const ph=document.getElementById('regPh').value.trim();
+    if(!nm||!ph){toast('⚠️','Missing Info','Please fill name and contact',true);return;}
+    document.getElementById('cfEv').textContent=document.getElementById('regEv').value;
+    document.getElementById('cfNm').textContent=nm;
+    document.getElementById('cfPh').textContent=ph;
+    document.getElementById('cfCo').textContent=document.getElementById('regCo').value||'Not specified';
+    regStep=2;
+  } else if(regStep===2) {
+    regStep=3;
+    document.getElementById('regFtr').innerHTML='<button class="btn-pri" onclick="closeModal(\'regModal\')">🎉 Close</button>';
+    setTimeout(()=>addBotMsg(`🎉 <strong>Registration Confirmed!</strong>\n\nThank you, ${document.getElementById('regNm').value}!\n\nYou're registered for ${document.getElementById('regEv').value}.\n\nConfirmation sent via WhatsApp &amp; LinkedIn. See you there! 🚀`,['🎪 More Events','📋 Menu']),500);
+  }
+  updReg();
+}
+function updReg(){
+  [1,2,3].forEach(i=>{
+    const e=document.getElementById('rs'+i);
+    e.className='rstep'+(i<regStep?' done':i===regStep?' active':'');
+  });
+  document.getElementById('rd1').style.display=regStep===1?'block':'none';
+  document.getElementById('rd2').style.display=regStep===2?'block':'none';
+  document.getElementById('rd3').style.display=regStep===3?'block':'none';
+  if(regStep<3)document.getElementById('regFtr').innerHTML=`<button class="btn-sec" onclick="closeModal('regModal')">Cancel</button><button class="btn-pri" onclick="nextReg()">${regStep===1?'Next →':'✅ Confirm'}</button>`;
+}
+
+// ─── TOAST ────────────────────────────────────────────────
+function toast(ico,ttl,dsc,err=false){
+  const t=document.getElementById('toastEl');
+  document.getElementById('toastIco').textContent=ico;
+  document.getElementById('toastTtl').textContent=ttl;
+  document.getElementById('toastDsc').textContent=dsc;
+  t.className='toast'+(err?' err':'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ─── COMPOSE ─────────────────────────────────────────────
+const platOnState = {wa:true,li:true,ig:true,tw:true};
+function togglePlatform(p){
+  platOnState[p]=!platOnState[p];
+  const el=document.getElementById('tog-'+p);
+  el.className=platOnState[p]?`plat-toggle on-${p}`:'plat-toggle';
+  updatePrev();updateCCCompose();
+}
+
+let prevTab='wa';
+function selectPrevTab(p,btn){
+  prevTab=p;
+  document.querySelectorAll('#prevTabs .pq-btn').forEach(b=>{
+    const cls=b.textContent.includes('WA')?'wa':b.textContent.includes('LI')?'li':b.textContent.includes('IG')?'ig':'tw';
+    b.classList.toggle('sel',cls===p);
+  });
+  updatePrev();
+}
+
+function updatePrev(){
+  const txt=(document.getElementById('postContent')?.value||'').trim();
+  const prevEl=document.getElementById('prevContent');
+  if(!prevEl)return;
+  const formatted=txt.replace(/\n/g,'<br>');
+  const previews = {
+    wa:`<div style="background:#1F2C34;border-radius:10px 10px 10px 2px;padding:10px 12px;font-size:12px;line-height:1.6;max-width:80%;">
+          ${formatted||'<span style="color:var(--sub);">Preview will appear here…</span>'}
+          <div style="font-size:10px;color:var(--sub);margin-top:4px;text-align:right;">Just now ✓✓</div>
+        </div>`,
+    li:`<div style="background:rgba(10,102,194,0.08);border:1px solid rgba(10,102,194,0.2);border-radius:10px;padding:12px;">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+            <div style="width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--gold),var(--gold-lt));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:10px;color:#0A0F13;">WTC</div>
+            <div><div style="font-size:12px;font-weight:600;">WTC Shamshabad</div><div style="font-size:10px;color:var(--sub);">Commercial Hub · Just now</div></div>
+          </div>
+          <div style="font-size:12px;line-height:1.6;">${formatted||'<span style="color:var(--sub);">Preview…</span>'}</div>
+          <div style="display:flex;gap:12px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(10,102,194,0.15);font-size:10px;color:var(--sub);">
+            <span>👍 Like</span><span>💬 Comment</span><span>🔁 Repost</span><span>📤 Send</span>
+          </div>
+        </div>`,
+    ig:`<div style="background:rgba(225,48,108,0.07);border:1px solid rgba(225,48,108,0.18);border-radius:10px;padding:10px;">
+          <div style="height:60px;border-radius:7px;background:linear-gradient(135deg,rgba(225,48,108,0.3),rgba(247,119,55,0.3));display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:8px;">🏢</div>
+          <div style="font-size:11px;line-height:1.5;">${formatted||'<span style="color:var(--sub);">Preview…</span>'}</div>
+          <div style="display:flex;gap:10px;margin-top:6px;font-size:11px;color:var(--sub);">
+            <span>❤️ Like</span><span>💬 Comment</span><span>✈️ Share</span><span>🔖 Save</span>
+          </div>
+        </div>`,
+    tw:`<div style="background:rgba(29,161,242,0.07);border:1px solid rgba(29,161,242,0.18);border-radius:10px;padding:10px;">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-lt));display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#0A0F13;">WTC</div>
+            <div><div style="font-size:11px;font-weight:600;">WTC Shamshabad</div><div style="font-size:10px;color:var(--sub);">@WTCShamshabad</div></div>
+          </div>
+          <div style="font-size:12px;line-height:1.6;">${(txt||'Preview…').substring(0,280).replace(/\n/g,'<br>')}</div>
+          <div style="display:flex;gap:12px;margin-top:7px;font-size:10px;color:var(--sub);">
+            <span>💬 Reply</span><span>🔁 Retweet</span><span>❤️ Like</span><span>📤 Share</span>
+          </div>
+        </div>`,
+  };
+  prevEl.innerHTML=previews[prevTab]||previews.wa;
+
+  const bpEl=document.getElementById('bestPractices');
+  if(bpEl){
+    const bp={
+      wa:`✅ WA best practices:<br>• Max 4096 chars (1024 for broadcasts)<br>• Add clear CTA like "Reply 1 for details"<br>• Use numbered lists for menus<br>• End with "Reply STOP to unsubscribe"`,
+      li:`💼 LinkedIn best practices:<br>• Hook in first 2 lines (before "see more")<br>• Use line breaks for readability<br>• 3–5 relevant hashtags<br>• Post Tue–Thu 8–10 AM for max reach<br>• Tag relevant companies/people`,
+      ig:`📸 Instagram best practices:<br>• First line is the hook<br>• 5–30 hashtags in comments<br>• Use emojis to break text<br>• Call to action: "Link in bio" or "DM us"<br>• Post Mon–Wed 11 AM–1 PM`,
+      tw:`𝕏 Twitter/X best practices:<br>• Max 280 chars per tweet<br>• Use threads for longer content<br>• 1–2 hashtags max for engagement<br>• Post Tue–Wed 9 AM–12 PM<br>• Engage with replies quickly`,
+    };
+    bpEl.innerHTML=bp[prevTab]||bp.wa;
+  }
+}
+
+function updateCCCompose(){
+  const txt=(document.getElementById('postContent')?.value)||'';
+  const limits={wa:1024,li:3000,ig:2200,tw:280};
+  const el=document.getElementById('ccRow');
+  if(!el)return;
+  el.innerHTML=Object.entries(limits).map(([p,max])=>{
+    const rem=max-txt.length;
+    const cls=rem<0?'cc-over':rem<50?'cc-warn':'cc-ok';
+    const icons={wa:'💬',li:'💼',ig:'📸',tw:'𝕏'};
+    return `<span class="cc-item ${cls}"><span class="cc-plat">${icons[p]}</span>${txt.length}/${max}</span>`;
+  }).join('');
+}
+
+function selSched(el){document.querySelectorAll('.so').forEach(s=>s.classList.remove('active'));el.classList.add('active');}
+
+function publishPost(){
+  const platforms=Object.entries(platOnState).filter(([,v])=>v).map(([k])=>k.toUpperCase());
+  if(platforms.length===0){toast('⚠️','No Platform','Select at least one platform',true);return;}
+  toast('🚀','Published!',`Post sent to: ${platforms.join(', ')}`);
+}
+
+// ─── CALENDAR ─────────────────────────────────────────────
+const calPosts = {
+  1:[{t:'cp-wa',l:'💬 WA Blast'}],
+  2:[{t:'cp-li',l:'💼 LI Post'}],
+  5:[{t:'cp-ig',l:'📸 Reel'}],
+  7:[{t:'cp-wa',l:'💬 Offers'}],
+  8:[{t:'cp-li',l:'💼 Article'},{t:'cp-tw',l:'𝕏 Thread'}],
+  10:[{t:'cp-ig',l:'📸 Story'}],
+  12:[{t:'cp-wa',l:'💬 Event Reminder'},{t:'cp-li',l:'💼 Summit Post'},{t:'cp-ig',l:'📸 Countdown'}],
+  14:[{t:'cp-tw',l:'𝕏 Live Coverage'}],
+  15:[{t:'cp-wa',l:'💬 Pitch Day'}],
+  18:[{t:'cp-ig',l:'📸 Behind Scenes'}],
+  20:[{t:'cp-wa',l:'💬 Weekly News'},{t:'cp-tw',l:'𝕏 News Thread'}],
+  22:[{t:'cp-li',l:'💼 Thought Leadership'}],
+  25:[{t:'cp-wa',l:'💬 Offers'},{t:'cp-ig',l:'📸 Carousel'}],
+  28:[{t:'cp-wa',l:'💬 March Summary'},{t:'cp-li',l:'💼 Monthly Recap'},{t:'cp-ig',l:'📸 Highlights'},{t:'cp-tw',l:'𝕏 Recap'}],
+};
+function buildCalendar(){
+  const grid=document.getElementById('calGrid');
+  if(!grid||grid.children.length>0)return;
+  const daysWrap=document.createElement('div');daysWrap.className='cal-grid';
+  const dayNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  dayNames.forEach(d=>{const h=document.createElement('div');h.className='cal-day-header';h.textContent=d;daysWrap.appendChild(h);});
+  grid.appendChild(daysWrap);
+  const cellGrid=document.createElement('div');cellGrid.className='cal-grid';
+  // March 2026 starts on Sunday = offset 6
+  for(let i=0;i<6;i++){const e=document.createElement('div');e.className='cal-cell';e.style.opacity='0.3';cellGrid.appendChild(e);}
+  for(let d=1;d<=31;d++){
+    const cell=document.createElement('div');
+    cell.className='cal-cell'+(d===27?' today':'');
+    const dateEl=document.createElement('div');
+    dateEl.className='cal-date'+(d===27?' today-date':'');
+    dateEl.textContent=d;
+    cell.appendChild(dateEl);
+    if(calPosts[d])calPosts[d].forEach(p=>{
+      const post=document.createElement('div');
+      post.className=`cal-post ${p.t}`;post.textContent=p.l;
+      post.onclick=()=>toast('📅','Post Details',`${p.l} — Scheduled for Mar ${d}, 2026`);
+      cell.appendChild(post);
+    });
+    const add=document.createElement('div');add.className='cal-add';add.textContent='+ Add';
+    add.onclick=()=>toast('➕','New Post',`Adding post for March ${d}, 2026`);
+    cell.appendChild(add);
+    cellGrid.appendChild(cell);
+  }
+  grid.appendChild(cellGrid);
+}
+
+// ─── ANALYTICS ────────────────────────────────────────────
+function buildAnalytics(){
+  buildChart();buildHeatmap();
+}
+function buildChart(){
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const wa=[89,124,98,156,201,87,124];
+  const li=[42,68,55,90,110,30,52];
+  const ig=[120,180,140,210,280,190,160];
+  const tw=[30,45,38,60,82,25,40];
+  const max=Math.max(...ig);
+  const c=document.getElementById('anaChart');
+  const cx=document.getElementById('anaChartX');
+  if(!c||c.children.length>0)return;
+  days.forEach((_,i)=>{
+    const col=document.createElement('div');col.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;height:100%;';
+    const inner=document.createElement('div');inner.style.cssText='flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px;width:100%;';
+    [{v:tw[i],c:'var(--tw)'},{v:ig[i],c:'var(--ig-lt)'},{v:li[i],c:'var(--li-lt)'},{v:wa[i],c:'var(--wa)'}].forEach(({v,c2})=>{
+      const b=document.createElement('div');b.className='cbar';
+      b.style.cssText=`background:${c2||c};height:${(v/max)*100}%`;
+      const tip=document.createElement('div');tip.className='tip';tip.textContent=v;
+      b.appendChild(tip);inner.appendChild(b);
+    });
+    col.appendChild(inner);c.appendChild(col);
+  });
+  if(cx)cx.innerHTML=days.map(d=>`<span>${d}</span>`).join('');
+}
+function buildHeatmap(){
+  const h=document.getElementById('hmap');
+  if(!h||h.children.length>0)return;
+  const cols=['rgba(37,211,102,0.1)','rgba(37,211,102,0.3)','rgba(37,211,102,0.55)','rgba(37,211,102,0.75)','rgba(37,211,102,1)'];
+  for(let i=0;i<28;i++){
+    const c=document.createElement('div');c.className='hcell';
+    const v=Math.floor(Math.random()*5);
+    c.style.background=cols[v];c.title=`${v*20+Math.floor(Math.random()*20)} interactions`;
+    h.appendChild(c);
+  }
+}
+
+// ─── SUBSCRIBERS ──────────────────────────────────────────
+const subsData=[
+  {n:'Arjun Mehta',p:'wa',handle:'+91 98765 43210',joined:'Jan 12',tags:['events','vip'],eng:'High',active:true},
+  {n:'Priya K.',p:'li',handle:'linkedin.com/in/priyak',joined:'Jan 15',tags:['events','news'],eng:'Medium',active:true},
+  {n:'rahul_shah',p:'ig',handle:'@rahul_shah',joined:'Feb 1',tags:['offers'],eng:'High',active:true},
+  {n:'Sunita N.',p:'wa',handle:'+91 65432 10987',joined:'Feb 5',tags:['news','events'],eng:'Low',active:true},
+  {n:'@TechDesk_Hyd',p:'tw',handle:'@TechDesk_Hyd',joined:'Feb 8',tags:['news'],eng:'Medium',active:true},
+  {n:'Vikram R.',p:'wa',handle:'+91 54321 09876',joined:'Feb 10',tags:['vip','events'],eng:'High',active:true},
+  {n:'Meera G.',p:'ig',handle:'@meera_g',joined:'Feb 12',tags:['offers','ig'],eng:'Medium',active:false},
+  {n:'Kiran P.',p:'li',handle:'linkedin.com/in/kiranp',joined:'Feb 16',tags:['vip','news'],eng:'High',active:true},
+  {n:'@WTCfan_Hyd',p:'tw',handle:'@WTCfan_Hyd',joined:'Feb 18',tags:['events'],eng:'Low',active:true},
+  {n:'Deepa M.',p:'wa',handle:'+91 10987 65432',joined:'Feb 19',tags:['events'],eng:'Medium',active:true},
+  {n:'Rohan V.',p:'ig',handle:'@rohan.v',joined:'Feb 20',tags:['offers','ig'],eng:'High',active:true},
+  {n:'Aisha R.',p:'li',handle:'linkedin.com/in/aishar',joined:'Feb 21',tags:['vip','events'],eng:'High',active:true},
+];
+const platIcons={wa:'💬',li:'💼',ig:'📸',tw:'𝕏'};
+const tagCls={events:'tp-wa',news:'tp-li',offers:'tp-ig',vip:'tp-vip',ig:'tp-ig'};
+
+function renderSubs(q,platFilter){
+  const tb=document.getElementById('subsTbody');if(!tb)return;
+  const filtered=subsData.filter(s=>{
+    const matchQ=!q||s.n.toLowerCase().includes(q)||s.handle.toLowerCase().includes(q)||s.tags.some(t=>t.includes(q));
+    const matchP=platFilter==='all'||s.p===platFilter;
+    return matchQ&&matchP;
+  });
+  tb.innerHTML=filtered.map(s=>`<tr>
+    <td><input type="checkbox" style="accent-color:var(--wa)"></td>
+    <td style="font-weight:600;">${s.n}</td>
+    <td>${platIcons[s.p]} <span style="font-size:10px;color:var(--sub);font-family:'JetBrains Mono',monospace;">${s.p.toUpperCase()}</span></td>
+    <td style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--sub);">${s.joined}</td>
+    <td><div style="display:flex;gap:3px;flex-wrap:wrap;">${s.tags.map(t=>`<span class="tag-pill ${tagCls[t]||'tp-wa'}">${t}</span>`).join('')}</div></td>
+    <td><span style="font-size:11px;color:${s.eng==='High'?'var(--wa)':s.eng==='Medium'?'var(--gold)':'var(--sub)'};">${s.eng}</span></td>
+    <td><span class="badge ${s.active?'bg':'br'}">${s.active?'Active':'Paused'}</span></td>
+    <td style="display:flex;gap:4px;">
+      <button class="act-m" onclick="toast('💬','Message Sent','Direct message sent to ${s.n}')">💬</button>
+      <button class="act-m" onclick="toast('🚫','User Blocked','${s.n} has been blocked')">🚫</button>
+    </td>
+  </tr>`).join('');
+}
+function filterSubs(q){renderSubs(q.toLowerCase(),document.querySelector('.fsel[onchange]')?.value||'all');}
+function filterByPlat(p){renderSubs(document.querySelector('.subs-search')?.value?.toLowerCase()||'',p);}
+function selAll(cb){document.querySelectorAll('#subsTbody input[type=checkbox]').forEach(e=>e.checked=cb.checked);}
+
+// ─── INIT ─────────────────────────────────────────────────
+updatePrev();updateCCCompose();
+// Init platform strip
+document.getElementById('platStrip').style.background='linear-gradient(90deg,var(--wa),transparent)';
+</script>
+</body>
+</html>
